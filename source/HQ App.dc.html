@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1"><meta name="theme-color" content="#000000"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="HQ"><meta name="application-name" content="HQ"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" href="icons/icon-192.png"><title>HQ</title><script>if('serviceWorker' in navigator && location.protocol.startsWith('http')) addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>html,body{height:100%;overscroll-behavior:none}body{margin:0;background:#000;font-family:'Geist',-apple-system,system-ui,sans-serif;color:#f5f5f5;-webkit-font-smoothing:antialiased}*{box-sizing:border-box}a{color:#9e9e9e}a:hover{color:#f5f5f5}button,input{font-family:inherit;color:inherit}button{cursor:pointer}input::placeholder{color:#5c5c5c}input:focus{outline:none}@keyframes sheetUp{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}</style></helmet>
+<div style="height:100dvh;display:flex;justify-content:center;background:#000">
+  <div style="position:relative;width:100%;max-width:520px;height:100%;background:#000;overflow:hidden;border-left:1px solid #111;border-right:1px solid #111">
+    <div style="position:absolute;top:env(safe-area-inset-top);left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom));overflow:hidden;padding-top:6px">
+
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:10px 18px 0;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
+              <h1 style="margin:0;font:600 28px/1.1 'Geist';letter-spacing:-.02em">{{ greeting }}</h1>
+              <div style="font-size:13px;color:#9e9e9e">{{ homeSummary }}</div>
+            </div>
+            <div style="display:flex;gap:8px;flex:none">
+              <button onClick="{{ openAdd }}" aria-label="Add task" style="width:42px;height:42px;border-radius:21px;border:0;background:#ededed;color:#000;display:grid;place-items:center" style-active="transform:scale(.94)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></button>
+              <button onClick="{{ goSearch }}" aria-label="Search" style="width:42px;height:42px;border-radius:21px;border:1px solid #1f1f1f;background:#0b0b0b;display:grid;place-items:center;color:#f5f5f5"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-3.5-3.5"></path></svg></button>
+              <button onClick="{{ openMore }}" aria-label="More" style="width:42px;height:42px;border-radius:21px;border:1px solid #1f1f1f;background:#0b0b0b;display:grid;place-items:center;color:#f5f5f5"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="5" cy="12" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle></svg></button>
+            </div>
+          </div>
+
+          <div style="background:#0b0b0b;border:1px solid #1c1c1c;border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font:500 11px 'Geist Mono';letter-spacing:.12em;text-transform:uppercase;color:#ededed">{{ hero.label }}</span>
+              <span style="font:600 12px 'Geist Mono';color:#000;background:#ededed;padding:4px 9px;border-radius:20px">{{ hero.until }}</span>
+            </div>
+            <div style="display:flex;gap:12px">
+              <div style="width:4px;border-radius:4px;background:{{ hero.color }};flex:none"></div>
+              <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
+                <div style="font:600 24px/1.15 'Geist';letter-spacing:-.015em">{{ hero.title }}</div>
+                <div style="font-size:13px;color:#9e9e9e">{{ hero.meta }}</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;border-top:1px solid #1a1a1a;padding-top:2px">
+              <sc-for list="{{ upcoming }}" as="u" hint-placeholder-count="2">
+                <div style="display:flex;align-items:center;gap:12px;padding:7px 0">
+                  <span style="width:62px;font:500 12px 'Geist Mono';color:#7a7a7a">{{ u.time }}</span>
+                  <span style="width:7px;height:7px;border-radius:4px;background:{{ u.color }};flex:none"></span>
+                  <span style="flex:1;font-size:14px;color:#d8d8d8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ u.title }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <button onClick="{{ openWhat }}" style="height:44px;border-radius:14px;border:1px solid #262626;background:#000;display:flex;align-items:center;justify-content:center;gap:8px;font:500 14px 'Geist'" style-active="transform:scale(.98)">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ededed" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"></path></svg>Not sure? What now
+            </button>
+          </div>
+
+          <div style="background:#0b0b0b;border:1px solid #1c1c1c;border-radius:24px;padding:14px 16px 4px;display:flex;flex-direction:column">
+            <button onClick="{{ goTasks }}" style="display:flex;align-items:center;gap:8px;background:none;border:0;padding:0 0 6px;text-align:left">
+              <span style="font:600 16px 'Geist'">Today</span><span style="font:500 12px 'Geist Mono';color:#5c5c5c">{{ todayLeft }}</span><span style="flex:1"></span>
+              <span style="font-size:12px;color:#7a7a7a">{{ todayMore }}</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5c5c5c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+            </button>
+            <sc-for list="{{ homeTasks }}" as="t" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid #141414">
+                <button onClick="{{ t.toggle }}" aria-label="Complete" style="width:24px;height:24px;border-radius:12px;border:2px solid {{ t.ring }};background:{{ t.checkBg }};display:grid;place-items:center;flex:none;padding:0;color:#000"><sc-if value="{{ t.done }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></button>
+                <div onClick="{{ t.open }}" style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;cursor:pointer">
+                  <span style="font-size:15px;color:{{ t.titleColor }};text-decoration:{{ t.deco }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.title }}</span>
+                  <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:{{ t.metaColor }}"><span style="width:6px;height:6px;border-radius:3px;background:{{ t.dot }}"></span>{{ t.meta }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="background:#0b0b0b;border:1px solid #1c1c1c;border-radius:24px;padding:14px 12px 12px;display:flex;flex-direction:column;gap:10px">
+            <button onClick="{{ goHabits }}" style="display:flex;align-items:center;gap:8px;padding:0 4px;background:none;border:0;text-align:left"><span style="font:600 16px 'Geist'">Habits</span><span style="font:500 12px 'Geist Mono';color:#5c5c5c">{{ habitCount }}</span><span style="flex:1"></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5c5c5c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></button>
+            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px">
+              <sc-for list="{{ habits }}" as="h" hint-placeholder-count="4">
+                <button onClick="{{ h.toggle }}" style="height:64px;border-radius:16px;border:1px solid {{ h.border }};background:{{ h.bg }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:0 4px" style-active="transform:scale(.96)">
+                  <span style="width:24px;height:24px;border-radius:12px;border:2px solid {{ h.color }};background:{{ h.box }};display:grid;place-items:center;color:#000"><sc-if value="{{ h.on }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></span>
+                  <span style="font:500 11.5px/1.15 'Geist';color:#e0e0e0;text-align:center">{{ h.short }}</span>
+                  <span style="font:500 10px 'Geist Mono';color:#5c5c5c">{{ h.streak }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isTasks }}">
+        <div style="padding:10px 0 0;display:flex;flex-direction:column;gap:12px;height:100%">
+          <div style="padding:0 18px;display:flex;align-items:center;justify-content:space-between">
+            <h1 style="margin:0;font:600 28px/1.1 'Geist';letter-spacing:-.02em">{{ view }}</h1>
+            <button onClick="{{ openWhat }}" style="height:36px;padding:0 14px;border-radius:18px;border:1px solid #262626;background:#0b0b0b;display:flex;align-items:center;gap:6px;font:500 13px 'Geist'"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ededed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"></path></svg>What now?</button>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;padding:0 18px">
+            <sc-for list="{{ views }}" as="v" hint-placeholder-count="8">
+              <button onClick="{{ v.pick }}" style="height:32px;padding:0 11px;border-radius:16px;border:1px solid {{ v.border }};background:{{ v.bg }};color:{{ v.color }};font:500 12.5px 'Geist';display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:3px;background:{{ v.dot }}"></span>{{ v.label }}<span style="font:500 11px 'Geist Mono';opacity:.55">{{ v.n }}</span></button>
+            </sc-for>
+          </div>
+          <div style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:0 18px;display:flex;flex-direction:column">
+            <sc-for list="{{ groups }}" as="g" hint-placeholder-count="1">
+              <sc-if value="{{ g.label }}"><div style="display:flex;align-items:center;gap:8px;padding:10px 0 4px;font:600 12px 'Geist';color:{{ g.color }}">{{ g.label }}<span style="font:500 11px 'Geist Mono';color:#5c5c5c">{{ g.n }}</span></div></sc-if>
+              <sc-for list="{{ g.items }}" as="t" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #141414">
+                  <button onClick="{{ t.toggle }}" aria-label="Complete" style="width:24px;height:24px;border-radius:12px;border:2px solid {{ t.ring }};background:{{ t.checkBg }};display:grid;place-items:center;flex:none;padding:0;color:#000"><sc-if value="{{ t.done }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></button>
+                  <div onClick="{{ t.open }}" style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;cursor:pointer">
+                    <span style="font-size:15px;color:{{ t.titleColor }};text-decoration:{{ t.deco }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.title }}</span>
+                    <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:{{ t.metaColor }}"><span style="width:6px;height:6px;border-radius:3px;background:{{ t.dot }}"></span>{{ t.meta }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </sc-for>
+            <sc-if value="{{ listEmpty }}"><div style="padding:56px 0;text-align:center;color:#5c5c5c;font-size:14px">Nothing here. Enjoy the space.</div></sc-if>
+            <sc-if value="{{ doneCount }}"><button onClick="{{ toggleShowDone }}" style="align-self:flex-start;margin-top:8px;height:30px;padding:0 12px;border-radius:15px;border:1px solid #1c1c1c;background:none;font:500 12px 'Geist';color:#7a7a7a">{{ doneLabel }}</button></sc-if>
+          </div>
+          <div style="padding:0 18px 12px">
+            <button onClick="{{ openAdd }}" style="width:100%;height:50px;border-radius:16px;border:1px solid #222;background:#0b0b0b;display:flex;align-items:center;gap:10px;padding:0 12px;color:#5c5c5c;font:400 14.5px 'Geist';text-align:left">
+              <span style="width:28px;height:28px;border-radius:14px;background:#ededed;color:#000;display:grid;place-items:center;flex:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></span>{{ addHint }}
+            </button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCal }}">
+        <div style="padding:10px 0 0;display:flex;flex-direction:column;gap:10px;height:100%">
+          <div style="padding:0 16px 0 18px;display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <button onClick="{{ calToday }}" style="display:flex;flex-direction:column;gap:2px;background:none;border:0;padding:0;text-align:left;min-width:0"><h1 style="margin:0;font:600 28px/1.1 'Geist';letter-spacing:-.02em">{{ calTitle }}</h1><span style="font-size:13px;color:#9e9e9e;white-space:nowrap">{{ calSub }}</span></button>
+            <div style="display:flex;gap:6px;align-items:center;flex:none">
+              <button onClick="{{ calPrev }}" aria-label="Previous" style="width:34px;height:34px;border-radius:17px;border:1px solid #1f1f1f;background:#0b0b0b;display:grid;place-items:center;color:#c8c8c8"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button>
+              <button onClick="{{ calNext }}" aria-label="Next" style="width:34px;height:34px;border-radius:17px;border:1px solid #1f1f1f;background:#0b0b0b;display:grid;place-items:center;color:#c8c8c8"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></button>
+              <button onClick="{{ openAdd }}" aria-label="Add" style="width:38px;height:38px;border-radius:19px;border:0;background:#ededed;color:#000;display:grid;place-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></button>
+            </div>
+          </div>
+          <div style="margin:0 16px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;padding:3px;border-radius:14px;background:#0b0b0b;border:1px solid #1c1c1c">
+            <sc-for list="{{ calModes }}" as="m" hint-placeholder-count="5"><button onClick="{{ m.pick }}" style="height:30px;border-radius:11px;border:0;background:{{ m.bg }};color:{{ m.color }};font:500 12.5px 'Geist'">{{ m.label }}</button></sc-for>
+          </div>
+
+          <sc-if value="{{ isDayMode }}">
+            <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;padding:0 12px">
+              <sc-for list="{{ weekDays }}" as="w" hint-placeholder-count="7">
+                <button onClick="{{ w.pick }}" style="height:54px;border-radius:14px;border:1px solid {{ w.border }};background:{{ w.bg }};color:{{ w.color }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px">
+                  <span style="font:500 10.5px 'Geist';opacity:.7">{{ w.dow }}</span><span style="font:600 16px 'Geist'">{{ w.date }}</span><span style="width:4px;height:4px;border-radius:2px;background:{{ w.dot }}"></span>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isGrid }}">
+            <sc-if value="{{ multiCol }}">
+              <div style="display:grid;grid-template-columns:{{ gridCols }};padding:0 8px 0 0">
+                <span></span>
+                <sc-for list="{{ cols }}" as="c"><button onClick="{{ c.pick }}" style="background:none;border:0;padding:2px 0;display:flex;flex-direction:column;align-items:center;gap:2px;color:{{ c.color }}"><span style="font:500 10.5px 'Geist';opacity:.7">{{ c.dow }}</span><span style="width:28px;height:28px;border-radius:14px;display:grid;place-items:center;font:600 14px 'Geist';background:{{ c.bg }};color:{{ c.numColor }}">{{ c.date }}</span></button></sc-for>
+              </div>
+            </sc-if>
+                        <div ref="{{ calScroll }}" style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding-right:8px">
+              <div style="position:relative;height:1216px">
+                <sc-for list="{{ hours }}" as="hr" hint-placeholder-count="24">
+                  <div style="position:absolute;left:0;right:0;top:{{ hr.top }};display:flex;align-items:flex-start;gap:6px"><span style="width:40px;text-align:right;font:500 10px 'Geist Mono';color:#4a4a4a;transform:translateY(-6px)">{{ hr.label }}</span><span style="flex:1;height:1px;background:#141414"></span></div>
+                </sc-for>
+                <div style="position:absolute;top:8px;bottom:0;left:0;right:0;display:grid;grid-template-columns:{{ gridCols }}">
+                  <span></span>
+                  <sc-for list="{{ cols }}" as="c">
+                    <div style="position:relative;border-left:1px solid #121212;background:{{ c.colBg }}">
+                      <sc-for list="{{ c.blocks }}" as="b">
+                        <div onClick="{{ b.open }}" style="position:absolute;left:2px;right:2px;top:{{ b.top }};height:{{ b.height }};border-radius:8px;background:{{ b.bg }};border-left:3px solid {{ b.color }};padding:4px 6px;display:flex;flex-direction:column;gap:1px;overflow:hidden;cursor:pointer">
+                          <span style="font:600 {{ b.size }} 'Geist';line-height:1.2;text-decoration:{{ b.deco }};overflow:hidden">{{ b.title }}</span><sc-if value="{{ b.sub }}"><span style="font-size:10.5px;color:#a0a0a0;white-space:nowrap">{{ b.sub }}</span></sc-if>
+                        </div>
+                      </sc-for>
+                      <sc-if value="{{ c.isToday }}"><div style="position:absolute;left:0;right:0;top:{{ nowTop }};height:2px;background:#f5f5f5;z-index:2"><span style="position:absolute;left:-4px;top:-3px;width:8px;height:8px;border-radius:4px;background:#f5f5f5"></span></div></sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isMonth }}">
+            <div style="padding:0 12px;display:flex;flex-direction:column;gap:4px">
+              <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr))"><sc-for list="{{ dowHead }}" as="d" hint-placeholder-count="7"><span style="text-align:center;font:500 10.5px 'Geist';color:#5c5c5c">{{ d }}</span></sc-for></div>
+              <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px">
+                <sc-for list="{{ monthCells }}" as="c" hint-placeholder-count="35">
+                  <button onClick="{{ c.pick }}" style="height:{{ c.h }};border-radius:10px;border:1px solid {{ c.border }};background:{{ c.bg }};padding:4px 3px;display:flex;flex-direction:column;align-items:center;gap:3px;overflow:hidden;min-width:0">
+                    <span style="width:22px;height:22px;border-radius:11px;display:grid;place-items:center;font:600 12px 'Geist';background:{{ c.numBg }};color:{{ c.color }}">{{ c.date }}</span>
+                    <sc-for list="{{ c.items }}" as="i"><span style="align-self:stretch;height:14px;border-radius:4px;background:#1c1c1c;border-left:2px solid {{ i.color }};font:500 9px/14px 'Geist';color:#c8c8c8;padding:0 3px;white-space:nowrap;overflow:hidden;text-align:left">{{ i.title }}</span></sc-for>
+                    <sc-if value="{{ c.more }}"><span style="font:500 9px 'Geist Mono';color:#5c5c5c">{{ c.more }}</span></sc-if>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:2px 18px 10px;display:flex;flex-direction:column">
+              <div style="font:600 13px 'Geist';color:#9e9e9e;padding:4px 0 6px">{{ agendaLabel }}</div>
+              <sc-for list="{{ agenda }}" as="t">
+                <div onClick="{{ t.open }}" style="display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid #141414;cursor:pointer">
+                  <span style="width:52px;font:500 11.5px 'Geist Mono';color:#7a7a7a">{{ t.time }}</span><span style="width:6px;height:6px;border-radius:3px;background:{{ t.color }}"></span><span style="flex:1;font-size:14px;color:{{ t.tc }};text-decoration:{{ t.deco }}">{{ t.title }}</span>
+                </div>
+              </sc-for>
+              <sc-if value="{{ agendaEmpty }}"><div style="font-size:13px;color:#4a4a4a;padding:8px 0">Nothing planned.</div></sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isYear }}">
+            <div style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:2px 14px 12px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 10px;align-content:start">
+              <sc-for list="{{ yearMonths }}" as="m" hint-placeholder-count="12">
+                <button onClick="{{ m.pick }}" style="background:none;border:0;padding:0;display:flex;flex-direction:column;gap:5px;text-align:left">
+                  <span style="font:600 13px 'Geist';color:{{ m.color }};padding-left:2px">{{ m.name }}</span>
+                  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px">
+                    <sc-for list="{{ m.days }}" as="d"><span style="height:14px;border-radius:7px;display:grid;place-items:center;font:500 8.5px 'Geist';background:{{ d.bg }};color:{{ d.color }}">{{ d.n }}</span></sc-for>
+                  </div>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isSearch }}">
+        <div style="padding:10px 18px 0;display:flex;flex-direction:column;gap:12px;height:100%">
+          <div style="display:flex;align-items:center;gap:10px">
+            <button onClick="{{ goHome }}" aria-label="Back" style="width:38px;height:38px;border-radius:19px;border:1px solid #1f1f1f;background:#0b0b0b;display:grid;place-items:center;color:#f5f5f5;flex:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button>
+            <div style="flex:1;height:44px;border-radius:14px;background:#0e0e0e;border:1px solid #262626;display:flex;align-items:center;gap:10px;padding:0 12px">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7a7a7a" stroke-width="2" stroke-linecap="round"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-3.5-3.5"></path></svg>
+              <input autoFocus="{{ true }}" value="{{ q }}" onChange="{{ onQ }}" placeholder="Search tasks and habits" style="flex:1;min-width:0;background:none;border:0;font:400 15px 'Geist';color:#f5f5f5"></input>
+              <sc-if value="{{ q }}"><button onClick="{{ clearQ }}" aria-label="Clear" style="width:22px;height:22px;border-radius:11px;border:0;background:#2a2a2a;color:#c8c8c8;font:600 12px 'Geist';padding:0">×</button></sc-if>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <sc-for list="{{ sFilters }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.pick }}" style="height:32px;padding:0 12px;border-radius:16px;border:1px solid {{ o.border }};background:{{ o.bg }};color:{{ o.color }};font:500 12.5px 'Geist';display:flex;gap:6px;align-items:center">{{ o.label }}<span style="font:500 11px 'Geist Mono';opacity:.55">{{ o.n }}</span></button></sc-for>
+          </div>
+          <div style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;padding-bottom:12px">
+            <sc-if value="{{ sIdle }}">
+              <div style="font:600 11px 'Geist Mono';letter-spacing:.1em;text-transform:uppercase;color:#5c5c5c;padding:6px 2px 8px">Try</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ sSuggest }}" as="g"><button onClick="{{ g.pick }}" style="height:34px;padding:0 13px;border-radius:12px;border:1px solid #222;background:#0b0b0b;font:500 13px 'Geist';color:#c8c8c8">{{ g.label }}</button></sc-for></div>
+            </sc-if>
+            <sc-for list="{{ sGroups }}" as="g">
+              <div style="display:flex;align-items:center;gap:8px;font:600 11px 'Geist Mono';letter-spacing:.1em;text-transform:uppercase;color:#5c5c5c;padding:12px 2px 4px">{{ g.label }}<span>{{ g.n }}</span></div>
+              <sc-for list="{{ g.items }}" as="t">
+                <button onClick="{{ t.open }}" style="display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 2px;border:0;border-bottom:1px solid #141414;background:none;text-align:left">
+                  <span style="width:24px;height:24px;border-radius:{{ t.radius }};border:2px solid {{ t.ring }};background:{{ t.fill }};flex:none"></span>
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+                    <span style="font-size:15px;color:{{ t.tc }};text-decoration:{{ t.deco }};line-height:1.3"><sc-for list="{{ t.parts }}" as="p"><span style="background:{{ p.bg }};color:{{ p.color }};border-radius:3px;padding:{{ p.pad }}">{{ p.s }}</span></sc-for></span>
+                    <span style="font-size:12px;color:#7a7a7a">{{ t.meta }}</span>
+                  </div>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3a3a3a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+                </button>
+              </sc-for>
+            </sc-for>
+            <sc-if value="{{ sNone }}"><div style="padding:48px 0;text-align:center;font-size:14px;color:#5c5c5c">Nothing matches “{{ q }}”</div></sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isSettings }}">
+        <div style="padding:10px 18px 14px;display:flex;flex-direction:column;gap:14px;height:100%;overflow-y:auto;scrollbar-width:none">
+          <div style="display:flex;align-items:center;gap:10px">
+            <button onClick="{{ goHome }}" aria-label="Back" style="width:38px;height:38px;border-radius:19px;border:1px solid #1f1f1f;background:#0b0b0b;display:grid;place-items:center;color:#f5f5f5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button>
+            <h1 style="margin:0;font:600 28px/1.1 'Geist';letter-spacing:-.02em">Settings</h1>
+          </div>
+          <div style="background:#0b0b0b;border:1px solid #1c1c1c;border-radius:20px;padding:4px 14px;display:flex;flex-direction:column">
+            <div style="display:flex;align-items:center;justify-content:space-between;min-height:52px;border-bottom:1px solid #141414"><span style="font-size:15px">Focus length</span>
+              <div style="display:flex;gap:3px;padding:3px;border-radius:12px;background:#141414"><sc-for list="{{ setFocusOpts }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border-radius:9px;border:0;background:{{ o.bg }};color:{{ o.color }};font:500 12px 'Geist Mono'">{{ o.label }}</button></sc-for></div>
+            </div>
+            <sc-for list="{{ setToggles }}" as="o" hint-placeholder-count="2">
+              <button onClick="{{ o.toggle }}" style="display:flex;align-items:center;justify-content:space-between;min-height:52px;border:0;border-bottom:1px solid #141414;background:none;padding:0;text-align:left"><span style="font-size:15px">{{ o.label }}</span>
+                <span style="width:46px;height:28px;border-radius:14px;background:{{ o.track }};padding:3px;display:flex;justify-content:{{ o.justify }};transition:all .2s"><span style="width:22px;height:22px;border-radius:11px;background:{{ o.knob }}"></span></span>
+              </button>
+            </sc-for>
+            <button onClick="{{ openAccount }}" style="display:flex;align-items:center;justify-content:space-between;min-height:52px;border:0;border-bottom:1px solid #141414;background:none;padding:0;text-align:left"><span style="font-size:15px">Sync</span><span style="font-size:13px;color:#7a7a7a">{{ syncText }}</span></button>
+            <button onClick="{{ openFeed }}" style="display:flex;align-items:center;justify-content:space-between;min-height:52px;border:0;background:none;padding:0;text-align:left"><span style="font-size:15px">Calendar feed</span><span style="font-size:13px;color:#7a7a7a">{{ feedNote }}</span></button>
+          </div>
+          <div style="font:600 11px 'Geist Mono';letter-spacing:.1em;text-transform:uppercase;color:#5c5c5c;padding:0 4px">Typing shortcuts</div>
+          <div style="background:#0b0b0b;border:1px solid #1c1c1c;border-radius:20px;padding:4px 14px;display:flex;flex-direction:column">
+            <sc-for list="{{ shortcuts }}" as="k" hint-placeholder-count="6">
+              <div style="display:flex;align-items:center;gap:12px;min-height:46px;border-bottom:1px solid {{ k.line }}">
+                <span style="min-width:86px;font:500 13px 'Geist Mono';color:#f5f5f5">{{ k.key }}</span><span style="font-size:13.5px;color:#9e9e9e">{{ k.does }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font:600 11px 'Geist Mono';letter-spacing:.1em;text-transform:uppercase;color:#5c5c5c;padding:0 4px">Tips</div>
+          <div style="background:#0b0b0b;border:1px solid #1c1c1c;border-radius:20px;padding:4px 14px;display:flex;flex-direction:column">
+            <sc-for list="{{ tips }}" as="k" hint-placeholder-count="4">
+              <div style="padding:12px 0;border-bottom:1px solid {{ k.line }};font-size:13.5px;line-height:1.45;color:#c8c8c8">{{ k.t }}</div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isFocus }}">
+        <div style="padding:10px 18px 0;display:flex;flex-direction:column;align-items:center;gap:18px;height:100%">
+          <div style="align-self:stretch;display:flex;align-items:center;justify-content:space-between"><h1 style="margin:0;font:600 28px/1.1 'Geist';letter-spacing:-.02em">Focus</h1>
+            <div style="display:flex;gap:4px;padding:3px;border-radius:18px;background:#0e0e0e;border:1px solid #1c1c1c">
+              <sc-for list="{{ presets }}" as="p" hint-placeholder-count="3"><button onClick="{{ p.pick }}" style="height:30px;padding:0 12px;border-radius:15px;border:0;background:{{ p.bg }};color:{{ p.color }};font:500 12.5px 'Geist Mono'">{{ p.label }}</button></sc-for>
+            </div>
+          </div>
+          <button onClick="{{ cycleFocusTask }}" style="height:40px;max-width:100%;padding:0 16px;border-radius:20px;border:1px solid #222;background:#0b0b0b;display:flex;align-items:center;gap:8px;font-size:13.5px;color:#c8c8c8"><span style="width:7px;height:7px;border-radius:4px;background:{{ focusTaskColor }};flex:none"></span><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ focusTaskTitle }}</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5c5c5c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M6 9l6 6 6-6"></path></svg></button>
+          <div style="position:relative;width:280px;height:280px;margin-top:6px">
+            <svg width="280" height="280" viewBox="0 0 280 280" style="position:absolute;inset:0;transform:rotate(-90deg)"><circle cx="140" cy="140" r="126" fill="none" stroke="#141414" stroke-width="10"></circle><circle cx="140" cy="140" r="126" fill="none" stroke="#ededed" stroke-width="10" stroke-linecap="round" stroke-dasharray="791.7" stroke-dashoffset="{{ ringOffset }}" style="transition:stroke-dashoffset 1s linear"></circle></svg>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px"><span style="font:500 64px/1 'Geist Mono';letter-spacing:-.03em">{{ timeText }}</span><span style="font:500 12px 'Geist Mono';letter-spacing:.12em;text-transform:uppercase;color:#7a7a7a">{{ timerState }}</span></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:center;margin-top:4px">
+            <button onClick="{{ resetTimer }}" aria-label="Reset" style="width:56px;height:56px;border-radius:28px;border:1px solid #222;background:#0b0b0b;display:grid;place-items:center;color:#9e9e9e"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"></path><path d="M4 9h11a5 5 0 0 1 0 10h-3"></path></svg></button>
+            <button onClick="{{ toggleTimer }}" style="height:64px;width:170px;border-radius:32px;border:0;background:#ededed;color:#000;font:600 17px 'Geist'" style-active="transform:scale(.97)">{{ timerBtn }}</button>
+            <button onClick="{{ skipTimer }}" aria-label="Finish now" style="width:56px;height:56px;border-radius:28px;border:1px solid #222;background:#0b0b0b;display:grid;place-items:center;color:#9e9e9e"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></button>
+          </div>
+          <div style="align-self:stretch;margin-top:auto;margin-bottom:14px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+            <div style="background:#0b0b0b;border:1px solid #1c1c1c;border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:4px"><span style="font:600 22px 'Geist Mono'">{{ sessions }}</span><span style="font-size:11.5px;color:#7a7a7a">sessions today</span></div>
+            <div style="background:#0b0b0b;border:1px solid #1c1c1c;border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:4px"><span style="font:600 22px 'Geist Mono'">{{ focusTotal }}</span><span style="font-size:11.5px;color:#7a7a7a">focused today</span></div>
+            <div style="background:#0b0b0b;border:1px solid #1c1c1c;border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:4px"><span style="font:600 22px 'Geist Mono'">{{ focusWeek }}</span><span style="font-size:11.5px;color:#7a7a7a">this week</span></div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isHabits }}">
+        <div style="padding:10px 18px 14px;display:flex;flex-direction:column;gap:10px;height:100%;overflow-y:auto;scrollbar-width:none">
+          <div style="display:flex;align-items:center;justify-content:space-between"><div style="display:flex;flex-direction:column;gap:2px"><h1 style="margin:0;font:600 28px/1.1 'Geist';letter-spacing:-.02em">Habits</h1><span style="font-size:13px;color:#9e9e9e">{{ habitCount }} done today</span></div>
+            <button onClick="{{ addHabit }}" aria-label="New habit" style="width:40px;height:40px;border-radius:20px;border:0;background:#ededed;color:#000;display:grid;place-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></button></div>
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) repeat(7,26px);gap:5px;align-items:center;padding:0 14px">
+            <span></span>
+            <sc-for list="{{ weekLetters }}" as="l" hint-placeholder-count="7"><span style="text-align:center;font:500 11px 'Geist Mono';color:{{ l.color }}">{{ l.label }}</span></sc-for>
+          </div>
+          <sc-for list="{{ habitRows }}" as="h" hint-placeholder-count="4">
+            <div style="background:#0b0b0b;border:1px solid #1c1c1c;border-radius:18px;padding:10px 14px;display:grid;grid-template-columns:minmax(0,1fr) repeat(7,26px);gap:5px;align-items:center">
+              <div style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font:500 14.5px 'Geist';white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.name }}</span><span style="font:500 11px 'Geist Mono';color:{{ h.color }};white-space:nowrap">{{ h.streak }}</span></div>
+              <sc-for list="{{ h.cells }}" as="c" hint-placeholder-count="7"><button onClick="{{ c.toggle }}" aria-label="Toggle day" style="width:26px;height:26px;border-radius:8px;border:1px solid {{ c.border }};background:{{ c.bg }};padding:0;box-shadow:{{ c.glow }}"></button></sc-for>
+            </div>
+          </sc-for>
+          <div style="background:#0b0b0b;border:1px solid #1c1c1c;border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;gap:6px">
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font:600 15px 'Geist'">Habits completed</span><span style="font-size:12px;color:#7a7a7a">{{ hcTitle }}</span></div>
+              <button onClick="{{ hcPrev }}" aria-label="Previous" style="width:30px;height:30px;border-radius:15px;border:1px solid #222;background:none;color:#c8c8c8;display:grid;place-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button>
+              <button onClick="{{ hcToday }}" style="height:30px;padding:0 10px;border-radius:15px;border:1px solid #222;background:none;font:500 12px 'Geist';color:#c8c8c8">Today</button>
+              <button onClick="{{ hcNext }}" aria-label="Next" style="width:30px;height:30px;border-radius:15px;border:1px solid #222;background:none;color:{{ hcNextColor }};display:grid;place-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;padding:3px;border-radius:12px;background:#141414">
+              <sc-for list="{{ hcPeriods }}" as="p" hint-placeholder-count="4"><button onClick="{{ p.pick }}" style="height:30px;border-radius:9px;border:0;background:{{ p.bg }};color:{{ p.color }};font:500 12.5px 'Geist'">{{ p.label }}</button></sc-for>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+              <sc-for list="{{ hcStats }}" as="st" hint-placeholder-count="3"><div style="background:#111;border-radius:12px;padding:9px 10px;display:flex;flex-direction:column;gap:2px"><span style="font:600 17px 'Geist Mono'">{{ st.v }}</span><span style="font-size:11px;color:#7a7a7a">{{ st.l }}</span></div></sc-for>
+            </div>
+            <sc-if value="{{ hcIsDay }}">
+              <div style="display:flex;flex-direction:column;gap:9px;padding:2px 0 4px">
+                <sc-for list="{{ hcDayRows }}" as="r" hint-placeholder-count="4">
+                  <div style="display:grid;grid-template-columns:76px minmax(0,1fr) 30px;align-items:center;gap:10px">
+                    <span style="font-size:12.5px;color:#c8c8c8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+                    <div style="height:10px;border-radius:5px;background:#161616;overflow:hidden"><div style="height:100%;width:{{ r.pct }};background:{{ r.bar }};border-radius:5px;transition:width .3s"></div></div>
+                    <span style="font:500 11px 'Geist Mono';color:{{ r.color }};text-align:right">{{ r.v }}</span>
+                  </div>
+                </sc-for>
+                <span style="font-size:11px;color:#5c5c5c">Bars show the last 30 days for each habit · {{ hcDayNote }}</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ hcIsChart }}">
+              <div style="display:grid;grid-template-columns:24px minmax(0,1fr);gap:6px">
+                <div style="position:relative;height:140px;margin-top:8px">
+                  <sc-for list="{{ hcTicks }}" as="t"><span style="position:absolute;right:2px;bottom:{{ t.pct }};transform:translateY(50%);font:500 10px 'Geist Mono';color:#5c5c5c">{{ t.v }}</span></sc-for>
+                </div>
+                <div style="position:relative;height:168px">
+                  <div style="position:absolute;left:0;right:0;top:8px;height:140px;border-bottom:1px solid #2a2a2a">
+                    <sc-for list="{{ hcTicks }}" as="t"><i style="position:absolute;left:0;right:0;bottom:{{ t.pct }};height:1px;background:#141414"></i></sc-for>
+                    <svg viewBox="{{ hcViewBox }}" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible"><polygon points="{{ hcArea }}" fill="#f5f5f5" opacity="0.06"></polygon><polyline points="{{ hcLine }}" fill="none" stroke="#e8e8e8" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"></polyline></svg>
+                    <sc-for list="{{ hcDots }}" as="d"><button onClick="{{ d.pick }}" aria-label="{{ d.aria }}" style="position:absolute;left:{{ d.left }};bottom:{{ d.bottom }};width:{{ d.size }};height:{{ d.size }};transform:translate(-50%,50%);border-radius:50%;border:2px solid #0b0b0b;background:{{ d.bg }};padding:0"></button></sc-for>
+                    <sc-if value="{{ hcTip }}"><div style="position:absolute;left:{{ hcTip.left }};bottom:{{ hcTip.bottom }};transform:translate({{ hcTip.shift }},-14px);background:#f5f5f5;color:#000;border-radius:8px;padding:4px 8px;font:600 11.5px 'Geist';white-space:nowrap;pointer-events:none;z-index:3">{{ hcTip.text }}</div></sc-if>
+                  </div>
+                  <div style="position:absolute;left:0;right:0;bottom:0;height:20px">
+                    <sc-for list="{{ hcX }}" as="x"><span style="position:absolute;left:{{ x.left }};top:4px;transform:translateX(-50%);font:{{ x.weight }} 10px 'Geist';color:{{ x.color }};white-space:nowrap">{{ x.label }}</span></sc-for>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+
+      <sc-if value="{{ isMatrix }}">
+        <div style="padding:10px 18px 14px;display:flex;flex-direction:column;gap:12px;height:100%">
+          <div style="display:flex;align-items:center;gap:10px">
+            <button onClick="{{ goHome }}" aria-label="Back" style="width:38px;height:38px;border-radius:19px;border:1px solid #1f1f1f;background:#0b0b0b;display:grid;place-items:center;color:#f5f5f5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button>
+            <h1 style="margin:0;font:600 28px/1.1 'Geist';letter-spacing:-.02em">Matrix</h1>
+          </div>
+          <div style="flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:8px">
+            <sc-for list="{{ quads }}" as="q" hint-placeholder-count="4">
+              <div style="background:#0b0b0b;border:1px solid {{ q.border }};border-radius:20px;padding:12px 12px 4px;display:flex;flex-direction:column;min-height:0;min-width:0">
+                <div style="display:flex;align-items:center;gap:6px"><span style="font:600 15px 'Geist'">{{ q.title }}</span><span style="font:500 12px 'Geist Mono';color:#5c5c5c">{{ q.n }}</span></div>
+                <span style="font-size:11px;color:#7a7a7a;padding:2px 0 6px">{{ q.sub }}</span>
+                <div style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column">
+                  <sc-for list="{{ q.items }}" as="t">
+                  <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid #141414">
+                    <button onClick="{{ t.toggle }}" aria-label="Complete" style="width:20px;height:20px;border-radius:10px;border:2px solid {{ t.ring }};background:{{ t.checkBg }};display:grid;place-items:center;flex:none;padding:0;color:#000"><sc-if value="{{ t.done }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></button>
+                    <div onClick="{{ t.open }}" style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;cursor:pointer">
+                      <span style="font-size:13.5px;color:{{ t.titleColor }};text-decoration:{{ t.deco }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.title }}</span>
+                      <span style="display:flex;align-items:center;gap:5px;font-size:11px;color:{{ t.metaColor }};white-space:nowrap;overflow:hidden"><span style="width:5px;height:5px;border-radius:3px;background:{{ t.dot }};flex:none"></span><span style="overflow:hidden;text-overflow:ellipsis">{{ t.meta }}</span></span>
+                    </div>
+                  </div>
+                  </sc-for>
+                  <sc-if value="{{ q.empty }}"><div style="font-size:12.5px;color:#4a4a4a;padding:8px 0;border-top:1px solid #141414">Nothing here.</div></sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size:12px;color:#5c5c5c;padding:0 4px">Urgent = due in the next 2 days. Important = high or medium priority. Tap a task to change its date or priority.</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isPlans }}">
+        <div style="padding:10px 18px 14px;display:flex;flex-direction:column;gap:10px;height:100%;overflow-y:auto;scrollbar-width:none">
+          <div style="display:flex;align-items:center;gap:10px">
+            <button onClick="{{ goHome }}" aria-label="Back" style="width:38px;height:38px;border-radius:19px;border:1px solid #1f1f1f;background:#0b0b0b;display:grid;place-items:center;color:#f5f5f5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button>
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><h1 style="margin:0;font:600 28px/1.1 'Geist';letter-spacing:-.02em">Plans</h1><span style="font-size:13px;color:#9e9e9e">{{ plansSub }}</span></div>
+            <button onClick="{{ newPlan }}" aria-label="New plan" style="width:40px;height:40px;border-radius:20px;border:0;background:#ededed;color:#000;display:grid;place-items:center;flex:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></button>
+          </div>
+          <sc-for list="{{ plans }}" as="p">
+            <div style="background:#0b0b0b;border:1px solid #1c1c1c;border-radius:20px;padding:14px 14px 6px;display:flex;flex-direction:column;gap:10px">
+              <button onClick="{{ p.edit }}" style="display:flex;align-items:flex-start;gap:10px;background:none;border:0;padding:0;text-align:left">
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font:600 16px 'Geist';white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.title }}</span><span style="font-size:12px;color:#7a7a7a">{{ p.sub }}</span></div>
+                <span style="font:600 11px 'Geist Mono';color:{{ p.pillColor }};background:{{ p.pillBg }};padding:4px 9px;border-radius:20px;white-space:nowrap;flex:none">{{ p.status }}</span>
+              </button>
+              <div style="height:6px;border-radius:3px;background:#141414;overflow:hidden"><div style="height:100%;width:{{ p.pct }};border-radius:3px;background:#ededed"></div></div>
+              <span style="font:500 11.5px 'Geist Mono';color:#7a7a7a">{{ p.doneText }}</span>
+              <div style="display:flex;flex-direction:column">
+                <sc-for list="{{ p.sessions }}" as="t">
+                  <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid #141414">
+                    <button onClick="{{ t.toggle }}" aria-label="Complete" style="width:24px;height:24px;border-radius:12px;border:2px solid {{ t.ring }};background:{{ t.checkBg }};display:grid;place-items:center;flex:none;padding:0;color:#000"><sc-if value="{{ t.done }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></button>
+                    <div onClick="{{ t.open }}" style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;cursor:pointer">
+                      <span style="font-size:15px;color:{{ t.titleColor }};text-decoration:{{ t.deco }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.title }}</span>
+                      <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:{{ t.metaColor }}"><span style="width:6px;height:6px;border-radius:3px;background:{{ t.dot }}"></span>{{ t.meta }}</span>
+                    </div>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ p.noneLeft }}"><div style="font-size:13px;color:#5c5c5c;padding:10px 0;border-top:1px solid #141414">No sessions left. Nice work.</div></sc-if>
+              </div>
+            </div>
+          </sc-for>
+          <sc-if value="{{ plansEmpty }}">
+            <div style="padding:56px 18px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center">
+              <span style="font:600 16px 'Geist'">Plan a deadline</span>
+              <span style="font-size:13.5px;line-height:1.45;color:#7a7a7a">Add an exam, essay or project and how many hours it needs. HQ splits it into daily sessions and moves missed ones forward.</span>
+              <button onClick="{{ newPlan }}" style="margin-top:8px;height:44px;padding:0 18px;border-radius:14px;border:0;background:#ededed;color:#000;font:600 14px 'Geist'">New plan</button>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ toast }}">
+      <div style="position:absolute;left:14px;right:14px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:25;height:50px;border-radius:16px;background:#1a1a1a;border:1px solid #2a2a2a;display:flex;align-items:center;gap:10px;padding:0 8px 0 16px;animation:sheetUp .25s ease-out;box-shadow:0 10px 30px rgba(0,0,0,.6)">
+        <span style="flex:1;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ toast.msg }}</span>
+        <sc-if value="{{ toast.undo }}"><button onClick="{{ undo }}" style="height:34px;padding:0 14px;border-radius:12px;border:0;background:#262626;font:600 13px 'Geist';color:#ededed">Undo</button></sc-if>
+      </div>
+    </sc-if>
+
+    <div style="position:absolute;left:0;right:0;bottom:0;height:calc(64px + env(safe-area-inset-bottom));background:rgba(0,0,0,.94);border-top:1px solid #161616;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px env(safe-area-inset-bottom);z-index:20">
+      <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="5">
+        <button onClick="{{ tb.pick }}" style="background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0;color:{{ tb.color }};position:relative">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="filter:{{ tb.glow }}"><path d="{{ tb.d }}"></path></svg>
+          <span style="font:500 10.5px 'Geist';font-variant-numeric:tabular-nums">{{ tb.label }}</span>
+          <sc-if value="{{ tb.live }}"><span style="position:absolute;top:2px;right:22px;width:7px;height:7px;border-radius:4px;background:#ededed"></span></sc-if>
+        </button>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ sheetOpen }}">
+      <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;z-index:50;background:rgba(0,0,0,.65);animation:fadeIn .2s"></div>
+      <div style="position:absolute;left:0;right:0;bottom:0;z-index:51;background:#0e0e0e;border-top:1px solid #222;border-radius:30px 30px 0 0;padding:10px 18px calc(24px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px;animation:sheetUp .28s cubic-bezier(.2,.8,.2,1)">
+        <div style="align-self:center;width:38px;height:5px;border-radius:3px;background:#2e2e2e"></div>
+
+        <sc-if value="{{ isAdd }}">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <input autoFocus="{{ true }}" value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onDraftKey }}" placeholder="What needs doing?" style="background:none;border:0;font:500 20px 'Geist';color:#f5f5f5;padding:6px 0"></input>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;min-height:30px">
+              <sc-for list="{{ parsedChips }}" as="c"><span style="height:30px;padding:0 11px;border-radius:10px;background:#181818;border:1px solid #262626;display:flex;align-items:center;gap:6px;font-size:12.5px;color:#e0e0e0"><span style="width:6px;height:6px;border-radius:3px;background:{{ c.color }}"></span>{{ c.label }}</span></sc-for>
+            </div>
+            <sc-if value="{{ duePicker }}">
+              <div style="background:#141414;border:1px solid #262626;border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:10px;animation:sheetUp .2s ease-out">
+                <div style="display:flex;gap:6px">
+                  <sc-for list="{{ dueQuick }}" as="q" hint-placeholder-count="4"><button onClick="{{ q.pick }}" style="flex:1;height:34px;border-radius:10px;border:1px solid #2a2a2a;background:#0e0e0e;font:500 12.5px 'Geist';color:#e0e0e0">{{ q.label }}</button></sc-for>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:0 2px">
+                  <span style="font:600 14px 'Geist'">{{ dpTitle }}</span>
+                  <div style="display:flex;gap:4px">
+                    <button onClick="{{ dpPrev }}" aria-label="Previous month" style="width:30px;height:30px;border-radius:15px;border:0;background:#1e1e1e;color:#c8c8c8;display:grid;place-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg></button>
+                    <button onClick="{{ dpNext }}" aria-label="Next month" style="width:30px;height:30px;border-radius:15px;border:0;background:#1e1e1e;color:#c8c8c8;display:grid;place-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg></button>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px">
+                  <sc-for list="{{ dowHead }}" as="d" hint-placeholder-count="7"><span style="text-align:center;font:500 10.5px 'Geist';color:#5c5c5c;padding-bottom:2px">{{ d }}</span></sc-for>
+                  <sc-for list="{{ dpCells }}" as="c" hint-placeholder-count="35"><button onClick="{{ c.pick }}" style="height:34px;border-radius:17px;border:{{ c.border }};background:{{ c.bg }};color:{{ c.color }};font:500 13px 'Geist';padding:0">{{ c.n }}</button></sc-for>
+                </div>
+              </div>
+            </sc-if>
+            <div style="display:flex;gap:8px">
+              <sc-for list="{{ quickAdds }}" as="q" hint-placeholder-count="3"><button onClick="{{ q.pick }}" style="height:38px;padding:0 13px;border-radius:12px;border:1px solid #262626;background:#141414;font:500 13px 'Geist';color:#c8c8c8">{{ q.label }}</button></sc-for>
+              <span style="flex:1"></span>
+              <button onClick="{{ submitAdd }}" style="height:38px;padding:0 18px;border-radius:12px;border:0;background:{{ addBg }};color:{{ addColor }};font:600 14px 'Geist'">Add</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isDetail }}">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:flex-start;gap:12px">
+              <button onClick="{{ d.toggle }}" style="width:28px;height:28px;margin-top:2px;border-radius:14px;border:2px solid {{ d.ring }};background:{{ d.checkBg }};display:grid;place-items:center;flex:none;padding:0;color:#000"><sc-if value="{{ d.done }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></button>
+              <div style="font:600 22px/1.25 'Geist';letter-spacing:-.01em;text-decoration:{{ d.deco }}">{{ d.title }}</div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+              <button onClick="{{ d.cycleList }}" style="height:56px;border-radius:14px;border:1px solid #222;background:#141414;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;padding:0 12px"><span style="font-size:11px;color:#7a7a7a">List</span><span style="display:flex;align-items:center;gap:6px;font:500 13.5px 'Geist'"><span style="width:7px;height:7px;border-radius:4px;background:{{ d.listColor }}"></span>{{ d.list }}</span></button>
+              <button onClick="{{ d.cycleDue }}" style="height:56px;border-radius:14px;border:1px solid #222;background:#141414;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;padding:0 12px"><span style="font-size:11px;color:#7a7a7a">Date</span><span style="font:500 13.5px 'Geist'">{{ d.when }}</span></button>
+              <button onClick="{{ d.cyclePrio }}" style="height:56px;border-radius:14px;border:1px solid #222;background:#141414;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;padding:0 12px"><span style="font-size:11px;color:#7a7a7a">Priority</span><span style="font:500 13.5px 'Geist';color:{{ d.prioColor }}">{{ d.prio }}</span></button>
+            </div>
+            <sc-if value="{{ d.hasSubs }}">
+              <div style="display:flex;flex-direction:column;background:#141414;border:1px solid #222;border-radius:14px;padding:4px 12px">
+                <sc-for list="{{ d.subs }}" as="s"><div onClick="{{ s.toggle }}" style="display:flex;align-items:center;gap:10px;padding:9px 0;cursor:pointer"><span style="width:18px;height:18px;border-radius:5px;border:2px solid {{ s.ring }};background:{{ s.bg }}"></span><span style="font-size:14px;color:{{ s.color }};text-decoration:{{ s.deco }}">{{ s.t }}</span></div></sc-for>
+              </div>
+            </sc-if>
+            <div style="display:flex;gap:8px">
+              <button onClick="{{ d.focus }}" style="flex:1;height:48px;border-radius:14px;border:0;background:#ededed;color:#000;font:600 14.5px 'Geist'">Focus on this</button>
+              <button onClick="{{ d.remove }}" style="height:48px;padding:0 16px;border-radius:14px;border:1px solid #2a1a1a;background:#140c0c;color:#ff5c5c;font:500 14px 'Geist'">Delete</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isWhat }}">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="font:600 20px 'Geist'">What now?</div>
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;color:#7a7a7a">Energy</span>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:3px;border-radius:14px;background:#141414"><sc-for list="{{ energyOpts }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.pick }}" style="height:36px;border-radius:11px;border:0;background:{{ o.bg }};color:{{ o.color }};font:500 13px 'Geist'">{{ o.label }}</button></sc-for></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;color:#7a7a7a">Free time</span>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:3px;border-radius:14px;background:#141414"><sc-for list="{{ timeOpts }}" as="o" hint-placeholder-count="3"><button onClick="{{ o.pick }}" style="height:36px;border-radius:11px;border:0;background:{{ o.bg }};color:{{ o.color }};font:500 13px 'Geist'">{{ o.label }}</button></sc-for></div>
+            </div>
+            <div style="border-radius:18px;padding:16px;background:#000;border:1px solid #2e2e2e;display:flex;flex-direction:column;gap:6px">
+              <span style="font:500 11px 'Geist Mono';letter-spacing:.12em;text-transform:uppercase;color:#ededed">Do this</span>
+              <span style="font:600 19px/1.25 'Geist'">{{ pick.title }}</span>
+              <span style="font-size:13px;color:#9e9e9e;line-height:1.45">{{ pick.why }}</span>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button onClick="{{ anotherPick }}" style="height:48px;padding:0 18px;border-radius:14px;border:1px solid #262626;background:#141414;font:500 14px 'Geist'">Another</button>
+              <button onClick="{{ startPick }}" style="flex:1;height:48px;border-radius:14px;border:0;background:#ededed;color:#000;font:600 14.5px 'Geist'">Start focus</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isPick }}">
+          <div style="display:flex;flex-direction:column;gap:12px;height:560px">
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font:600 20px 'Geist'">Focus on…</span><button onClick="{{ closeSheet }}" style="background:none;border:0;font:500 14px 'Geist';color:#9e9e9e">Cancel</button></div>
+            <div style="height:46px;border-radius:14px;background:#141414;border:1px solid #262626;display:flex;align-items:center;gap:10px;padding:0 14px">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7a7a7a" stroke-width="2" stroke-linecap="round"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-3.5-3.5"></path></svg>
+              <input autoFocus="{{ true }}" value="{{ pickQuery }}" onChange="{{ onPickQuery }}" placeholder="Search tasks" style="flex:1;min-width:0;background:none;border:0;font:400 15px 'Geist';color:#f5f5f5"></input>
+              <sc-if value="{{ pickQuery }}"><button onClick="{{ clearPickQuery }}" aria-label="Clear" style="width:22px;height:22px;border-radius:11px;border:0;background:#2a2a2a;color:#c8c8c8;font:600 12px 'Geist';padding:0">×</button></sc-if>
+            </div>
+            <div style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column">
+              <sc-for list="{{ pickGroups }}" as="g">
+                <div style="font:600 11px 'Geist Mono';letter-spacing:.1em;text-transform:uppercase;color:#5c5c5c;padding:10px 2px 4px">{{ g.label }}</div>
+                <sc-for list="{{ g.items }}" as="t">
+                  <button onClick="{{ t.pick }}" style="display:flex;align-items:center;gap:12px;min-height:52px;padding:8px 10px;border-radius:12px;border:0;background:{{ t.bg }};text-align:left">
+                    <span style="width:8px;height:8px;border-radius:4px;background:{{ t.dot }};flex:none"></span>
+                    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;color:#f0f0f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.title }}</span><span style="font-size:12px;color:#7a7a7a">{{ t.meta }}</span></div>
+                    <sc-if value="{{ t.sel }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f5f5f5" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if>
+                  </button>
+                </sc-for>
+              </sc-for>
+              <sc-if value="{{ pickEmpty }}"><div style="padding:30px 0;text-align:center;font-size:14px;color:#5c5c5c">No tasks match “{{ pickQuery }}”</div></sc-if>
+            </div>
+            <button onClick="{{ pickNone }}" style="height:46px;border-radius:14px;border:1px solid #262626;background:none;font:500 14px 'Geist';color:#c8c8c8">Just focus, no task</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isMore }}">
+          <div style="display:flex;flex-direction:column">
+            <sc-for list="{{ moreItems }}" as="m" hint-placeholder-count="4">
+              <button onClick="{{ m.pick }}" style="display:flex;align-items:center;gap:14px;height:56px;background:none;border:0;border-bottom:1px solid #181818;text-align:left;padding:0 4px">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c8c8c8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ m.d }}"></path></svg>
+                <span style="flex:1;font:500 15.5px 'Geist'">{{ m.label }}</span><span style="font-size:12px;color:#5c5c5c">{{ m.note }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isPlanEdit }}">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font:600 20px 'Geist'">{{ pd.heading }}</span><button onClick="{{ closeSheet }}" style="background:none;border:0;font:500 14px 'Geist';color:#9e9e9e">Cancel</button></div>
+            <input value="{{ pd.title }}" onChange="{{ pd.onTitle }}" placeholder="What’s the deadline for?" maxLength="80" style="background:none;border:0;font:500 20px 'Geist';color:#f5f5f5;padding:6px 0"></input>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px">
+              <label style="height:56px;border-radius:14px;border:1px solid #222;background:#141414;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;padding:0 12px;position:relative"><span style="font-size:11px;color:#7a7a7a">Deadline</span><span style="font:500 13.5px 'Geist'">{{ pd.dueLabel }}</span>
+                <input type="date" value="{{ pd.due }}" min="{{ pd.minDue }}" onChange="{{ pd.onDue }}" onClick="{{ pd.showPicker }}" aria-label="Deadline" style="position:absolute;inset:0;opacity:0;width:100%;height:100%;border:0;color-scheme:dark"></input></label>
+              <div style="height:56px;border-radius:14px;border:1px solid #222;background:#141414;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;padding:0 12px;flex-direction:row;align-items:center;justify-content:space-between;padding:0 6px 0 12px">
+                <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:11px;color:#7a7a7a">Total work</span><span style="font:500 13.5px 'Geist Mono'">{{ pd.hours }}</span></div>
+                <div style="display:flex;gap:4px"><button onClick="{{ pd.minus }}" aria-label="Less" style="width:32px;height:32px;border-radius:16px;border:0;background:#1e1e1e;color:#c8c8c8;font:500 16px 'Geist'">−</button><button onClick="{{ pd.plus }}" aria-label="More" style="width:32px;height:32px;border-radius:16px;border:0;background:#1e1e1e;color:#c8c8c8;font:500 16px 'Geist'">+</button></div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;color:#7a7a7a">Session length</span>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:3px;border-radius:14px;background:#141414"><sc-for list="{{ pd.sessOpts }}" as="o" hint-placeholder-count="4"><button onClick="{{ o.pick }}" style="height:36px;border-radius:11px;border:0;background:{{ o.bg }};color:{{ o.color }};font:500 13px 'Geist Mono'">{{ o.label }}</button></sc-for></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px">
+              <button onClick="{{ pd.cycleList }}" style="height:56px;border-radius:14px;border:1px solid #222;background:#141414;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;padding:0 12px"><span style="font-size:11px;color:#7a7a7a">List</span><span style="display:flex;align-items:center;gap:6px;font:500 13.5px 'Geist'"><span style="width:7px;height:7px;border-radius:4px;background:{{ pd.listColor }}"></span>{{ pd.list }}</span></button>
+              <button onClick="{{ pd.toggleWk }}" style="height:56px;border-radius:14px;border:1px solid #222;background:#141414;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;padding:0 12px;flex-direction:row;align-items:center;justify-content:space-between"><span style="font:500 13.5px 'Geist'">Weekends free</span>
+                <span style="width:40px;height:24px;border-radius:12px;background:{{ pd.wk.track }};padding:3px;display:flex;justify-content:{{ pd.wk.justify }};transition:all .2s;flex:none"><span style="width:18px;height:18px;border-radius:9px;background:{{ pd.wk.knob }}"></span></span></button>
+            </div>
+            <div style="font-size:12.5px;line-height:1.45;color:#7a7a7a">{{ pd.preview }}</div>
+            <sc-if value="{{ pd.err }}"><div style="font-size:13px;color:#ff5c5c">{{ pd.err }}</div></sc-if>
+            <div style="display:flex;gap:8px">
+              <sc-if value="{{ pd.isEdit }}"><button onClick="{{ pd.remove }}" style="height:48px;padding:0 16px;border-radius:14px;border:1px solid #2a1a1a;background:#140c0c;color:#ff5c5c;font:500 14px 'Geist'">Delete</button></sc-if>
+              <button onClick="{{ pd.save }}" style="flex:1;height:48px;border-radius:14px;border:0;background:#ededed;color:#000;font:600 14.5px 'Geist'">{{ pd.go }}</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isAccount }}">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font:600 20px 'Geist'">{{ acct.title }}</span><button onClick="{{ closeSheet }}" style="background:none;border:0;font:500 14px 'Geist';color:#9e9e9e">Cancel</button></div>
+            <sc-if value="{{ acct.signedIn }}">
+              <div style="background:#141414;border:1px solid #222;border-radius:14px;padding:4px 12px;display:flex;flex-direction:column">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:46px;border-bottom:1px solid #1e1e1e"><span style="font-size:14px;color:#9e9e9e">Signed in as</span><span style="font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ acct.email }}</span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;min-height:46px"><span style="font-size:14px;color:#9e9e9e">Sync</span><span style="font-size:14px">{{ acct.status }}</span></div>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button onClick="{{ acct.signOut }}" style="height:48px;padding:0 16px;border-radius:14px;border:1px solid #2a1a1a;background:#140c0c;color:#ff5c5c;font:500 14px 'Geist'">Sign out</button>
+                <button onClick="{{ acct.syncNow }}" style="flex:1;height:48px;border-radius:14px;border:0;background:#ededed;color:#000;font:600 14.5px 'Geist'">Sync now</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ acct.signedOut }}">
+              <span style="font-size:13px;line-height:1.45;color:#9e9e9e">{{ acct.hint }}</span>
+              <input type="email" autoComplete="username" value="{{ acct.emailVal }}" onChange="{{ acct.onEmail }}" onKeyDown="{{ acct.onKey }}" placeholder="Email" style="height:46px;border-radius:14px;background:#141414;border:1px solid #262626;padding:0 14px;font:400 15px 'Geist';color:#f5f5f5;width:100%"></input>
+              <sc-if value="{{ acct.isReset }}"><input autoComplete="off" autoCapitalize="characters" spellCheck="false" value="{{ acct.codeVal }}" onChange="{{ acct.onCode }}" onKeyDown="{{ acct.onKey }}" placeholder="Recovery code" style="height:46px;border-radius:14px;background:#141414;border:1px solid #262626;padding:0 14px;font:400 15px 'Geist';color:#f5f5f5;width:100%;font-family:'Geist Mono'"></input></sc-if>
+              <input type="password" autoComplete="{{ acct.pwAuto }}" value="{{ acct.pwVal }}" onChange="{{ acct.onPw }}" onKeyDown="{{ acct.onKey }}" placeholder="{{ acct.pwPh }}" style="height:46px;border-radius:14px;background:#141414;border:1px solid #262626;padding:0 14px;font:400 15px 'Geist';color:#f5f5f5;width:100%"></input>
+              <sc-if value="{{ acct.msg }}"><div style="font-size:13px;line-height:1.4;color:#ff5c5c">{{ acct.msg }}</div></sc-if>
+              <button onClick="{{ acct.submit }}" style="height:48px;border-radius:14px;border:0;background:#ededed;color:#000;font:600 14.5px 'Geist'">{{ acct.go }}</button>
+              <div style="display:flex;justify-content:center;gap:18px">
+                <sc-for list="{{ acct.links }}" as="l"><button onClick="{{ l.pick }}" style="background:none;border:0;padding:4px 0;font:500 13px 'Geist';color:#9e9e9e">{{ l.label }}</button></sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isRecovery }}">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <span style="font:600 20px 'Geist'">Save your recovery code</span>
+            <span style="font-size:13px;line-height:1.45;color:#9e9e9e">If you forget your password, this code is the only way back in. Put it in your password manager or a note. You won’t see it again.</span>
+            <div style="border-radius:14px;padding:16px;background:#000;border:1px solid #2e2e2e;font:600 17px 'Geist Mono';letter-spacing:.06em;text-align:center;user-select:all;-webkit-user-select:all">{{ recoveryCode }}</div>
+            <div style="display:flex;gap:8px">
+              <button onClick="{{ copyCode }}" style="height:48px;padding:0 18px;border-radius:14px;border:1px solid #262626;background:#141414;font:500 14px 'Geist'">Copy</button>
+              <button onClick="{{ doneCode }}" style="flex:1;height:48px;border-radius:14px;border:0;background:#ededed;color:#000;font:600 14.5px 'Geist'">I saved it</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isFeed }}">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font:600 20px 'Geist'">Calendar feed</span><button onClick="{{ closeSheet }}" style="background:none;border:0;font:500 14px 'Geist';color:#9e9e9e">Cancel</button></div>
+            <span style="font-size:13px;line-height:1.45;color:#9e9e9e">Subscribe to this link and your dated tasks show up in Apple Calendar, Google Calendar or Outlook. Timed tasks come with an alert, so your phone reminds you even when HQ is closed.</span>
+            <sc-if value="{{ feed.loading }}"><div style="height:46px;border-radius:14px;background:#141414;border:1px solid #262626;padding:0 14px;font:400 15px 'Geist';color:#f5f5f5;width:100%;display:flex;align-items:center;color:#5c5c5c">Making your link…</div></sc-if>
+            <sc-if value="{{ feed.ready }}"><input readOnly="{{ true }}" value="{{ feed.url }}" onFocus="{{ feed.selectAll }}" aria-label="Calendar feed link" style="height:46px;border-radius:14px;background:#141414;border:1px solid #262626;padding:0 14px;font:400 15px 'Geist';color:#f5f5f5;width:100%;font:400 12.5px 'Geist Mono';color:#c8c8c8"></input></sc-if>
+            <div style="display:flex;gap:8px">
+              <button onClick="{{ feed.copy }}" style="height:48px;padding:0 18px;border-radius:14px;border:1px solid #262626;background:#141414;font:500 14px 'Geist'">Copy link</button>
+              <button onClick="{{ feed.apple }}" style="flex:1;height:48px;border-radius:14px;border:0;background:#ededed;color:#000;font:600 14.5px 'Geist'">Add to Apple Calendar</button>
+            </div>
+            <div style="display:flex;flex-direction:column;background:#141414;border:1px solid #222;border-radius:14px;padding:2px 12px">
+              <div style="padding:10px 0;border-bottom:1px solid #1e1e1e;font-size:12.5px;line-height:1.45;color:#9e9e9e"><span style="color:#f5f5f5">iPhone / Mac:</span> tap Add to Apple Calendar. Keep the alerts, and set refresh to every 15 minutes.</div>
+              <div style="padding:10px 0;border-bottom:1px solid #1e1e1e;font-size:12.5px;line-height:1.45;color:#9e9e9e"><span style="color:#f5f5f5">Google Calendar:</span> Other calendars → + → From URL → paste. Google can take up to a day to refresh.</div>
+              <div style="padding:10px 0;font-size:12.5px;line-height:1.45;color:#9e9e9e">Keep the link private: anyone with it can see your tasks. <button onClick="{{ feed.reset }}" style="background:none;border:0;padding:0;font:500 12.5px 'Geist';color:#f5f5f5;text-decoration:underline">Make a new link</button> turns the old one off.</div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#000"/><text x="50" y="62" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-weight="700" font-size="34" fill="#fff">HQ</text></svg></template>
+<script type="text/x-dc" data-dc-script>
+
+/* ---------- real dates ----------
+   Task dates are kept as 'YYYY-MM-DD' (same as Doable) and turned into day offsets from today
+   for the screens, so "today" is always the real today. */
+const pad = n => String(n).padStart(2, '0');
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parseYmd = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (s, n) => { const d = parseYmd(s); d.setDate(d.getDate() + n); return ymd(d); };
+const todayStr = () => ymd(new Date());
+const toMins = hm => { const [h, m] = String(hm).split(':').map(Number); return h * 60 + (m || 0); };
+const hmOf = m => `${pad(Math.floor(m / 60))}:${pad(m % 60)}`;
+const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
+let BASE = new Date(); BASE.setHours(0, 0, 0, 0);
+let NOW = new Date().getHours() * 60 + new Date().getMinutes();
+function refreshClock() {
+  const n = new Date(), b = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+  const newDay = b.getTime() !== BASE.getTime();
+  BASE = b; NOW = n.getHours() * 60 + n.getMinutes();
+  return newDay;
+}
+const CAL0 = 480, PXM = 50 / 60;
+const HQC = { inbox: '#6b6b6b', personal: '#d9d9d9', work: '#9a9a9a', school: '#f5f5f5', groc: '#585858' };
+const PAL = ['#d9d9d9', '#9a9a9a', '#f5f5f5', '#585858', '#bdbdbd', '#7a7a7a', '#e8e8e8', '#8a8a8a'];
+let LISTS = [{ id: 'inbox', name: 'Inbox', c: '#6b6b6b' }];
+let HABITS = [];
+const PRIO = ['None', 'Low', 'Medium', 'High'], PRING = ['#3a3a3a', '#6b6b6b', '#a8a8a8', '#f5f5f5'];
+const DOWS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const lc = id => LISTS.find(l => l.id === id) || LISTS[0];
+const dateOf = off => new Date(BASE.getFullYear(), BASE.getMonth(), BASE.getDate() + off);
+const offOf = (y, m, d) => Math.round((new Date(y, m, d) - BASE) / 864e5);
+const offYmd = s => { const [y, m, d] = s.split('-').map(Number); return offOf(y, m - 1, d); };
+const ymdOff = off => ymd(dateOf(off));
+const dow = off => dateOf(off).getDay();
+const MON = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const short = off => { const d = dateOf(off); return MON[d.getMonth()].slice(0, 3) + ' ' + d.getDate(); };
+const dayLabel = d => d == null ? 'No date' : d === 0 ? 'Today' : d === 1 ? 'Tomorrow' : d === -1 ? 'Yesterday' : d < -1 ? `${-d} days ago` : d < 7 ? DOWS[dow(d)] : short(d);
+const tm = m => { const h = Math.floor(m / 60), mm = m % 60, ap = h >= 12 && h < 24 ? 'pm' : 'am', h12 = h % 12 || 12; return mm ? `${h12}:${String(mm).padStart(2, '0')}${ap}` : `${h12}${ap}`; };
+const fmtMins = m => m >= 60 ? `${Math.floor(m / 60)}h${m % 60 ? ' ' + (m % 60) + 'm' : ''}` : `${m}m`;
+const ICON = {
+  home: 'M3 11l9-7 9 7M5 10v10h5v-6h4v6h5V10',
+  tasks: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM8 12.3l2.8 2.8L16.5 9.5',
+  cal: 'M6 5h12a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3zM3 10h18M8 3v4M16 3v4',
+  focus: 'M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM12 9v4l2.5 2.5M9 2h6',
+  habit: 'M12 21c-4.4 0-8-3.4-8-7.7C4 8 12 3 12 3s8 5 8 10.3c0 4.3-3.6 7.7-8 7.7zM9 14l2 2 4-4',
+  school: 'M2 9l10-5 10 5-10 5zM6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5',
+  journal: 'M6 3h11a2 2 0 0 1 2 2v16H7a2 2 0 0 1-2-2V4a1 1 0 0 1 1-1zM9 7h6M9 10.5h4',
+  search: 'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-3.5-3.5',
+  gear: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM12 2v3M12 19v3M2 12h3M19 12h3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1',
+  matrix: 'M5 4h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM14 4h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM5 13h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1zM14 13h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1z',
+  target: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 16.5a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9zM12 12.5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z',
+};
+function niceTicks(max) {
+  if (max <= 5) return [...Array(max + 1)].map((_, i) => i);
+  const step = [1, 2, 5, 10, 20, 25, 50, 100, 200].find(s => max / s <= 4);
+  const t = []; for (let v = 0; v <= max; v += step) t.push(v); if (t[t.length - 1] !== max) t.push(max); return t;
+}
+function parse(s) {
+  const out = { title: [], due: null, time: null, prio: 0, list: 'inbox', tags: [] };
+  for (const w of s.trim().split(/\s+/)) {
+    const lw = w.toLowerCase(); let m;
+    if (lw === 'today') out.due = 0;
+    else if (lw === 'tomorrow' || lw === 'tmr') out.due = 1;
+    else if ((m = DOWS.findIndex(d => lw.startsWith(d.toLowerCase()) && lw.length <= 9)) >= 0 && /^(sun|mon|tue|wed|thu|fri|sat)/.test(lw)) out.due = ((m - dow(0) + 7) % 7) || 7;
+    else if ((m = lw.match(/^(\d{1,2})(?::(\d\d))?(am|pm)$/))) { let h = +m[1] % 12; if (m[3] === 'pm') h += 12; out.time = h * 60 + (+m[2] || 0); if (out.due == null) out.due = 0; }
+    else if ((m = lw.match(/^!([1-3])$/))) out.prio = 4 - +m[1];
+    else if (lw.startsWith('^') && lw.length > 1) { const l = LISTS.find(l => l.name.toLowerCase().startsWith(lw.slice(1))); if (l) out.list = l.id; else out.title.push(w); }
+    else if (lw.startsWith('#') && lw.length > 1) out.tags.push(w.slice(1));
+    else if (lw === 'due') {}
+    else if (w) out.title.push(w);
+  }
+  out.title = out.title.join(' ');
+  return out;
+}
+function shortName(name) {
+  const w = String(name || '').trim().split(/\s+/);
+  if (w.join(' ').length <= 10) return w.join(' ');
+  if (/^no$/i.test(w[0])) return w.slice(0, 2).join(' ');
+  if (/^(drink|do|go|take|eat|have|make|get|practice|practise)$/i.test(w[0])) { const l = w[w.length - 1]; return l[0].toUpperCase() + l.slice(1); }
+  return w[0][0].toUpperCase() + w[0].slice(1);
+}
+
+/* ---------- saved data ----------
+   One document in the same shape Doable uses (lists, tasks, habits, pomos, plans...), saved on
+   this device and synced through Doable's /api. Every record carries updatedAt; deletes leave
+   tombstones, so devices merge record by record. */
+const KEY = 'hq.v1', OWNER = 'hq.owner';
+const ENT = ['tasks', 'lists', 'habits', 'pomos', 'plans', 'distractions', 'energy', 'reviews', 'courses', 'grades', 'journal'];
+const SYNC_KEYS = ['lists', 'tasks', 'habits', 'pomos', 'plans', 'distractions', 'energy', 'reviews', 'courses', 'grades', 'journal', 'settings', 'tombs', 'epoch'];
+const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const lsSet = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+function migrate(s) {
+  s.lists ??= []; s.tasks ??= []; s.habits ??= []; s.pomos ??= []; s.closedFolders ??= []; s.tombs ??= {}; s.plans ??= []; s.distractions ??= []; s.energy ??= []; s.reviews ??= []; s.courses ??= []; s.grades ??= []; s.journal ??= [];
+  s.settings = { theme: 'dark', focus: 25, short: 5, long: 15, sort: 'date', hideDone: false, textSize: 'm', density: 'comfortable', absDates: false, hiddenTools: [], ...(s.settings || {}) };
+  if (!s.settings.darkDefault) { s.settings.theme = 'dark'; s.settings.darkDefault = true; }
+  if (!s.lists.find(l => l.id === 'inbox')) s.lists.unshift({ id: 'inbox', name: 'Inbox', color: '#7a7f7c' });
+  for (const l of s.lists) { l.sections ??= ['To do', 'In progress', 'Waiting']; l.mode ??= 'list'; }
+  for (const t of s.tasks) { t.tags ??= []; t.subtasks ??= []; t.priority ??= 0; t.status ??= 'open'; t.order ??= t.createdAt || 0; }
+  for (const h of s.habits) h.log ??= {};
+  return s;
+}
+function seed() {
+  const hb = (name, shortN, color) => ({ id: uid(), name, short: shortN, color, log: {} });
+  return migrate({
+    lists: [
+      { id: 'inbox', name: 'Inbox', color: '#7a7f7c' },
+      { id: 'personal', name: 'Personal', color: '#0b8a68', folder: '' },
+      { id: 'work', name: 'Work', color: '#5b7fd1', folder: '' },
+      { id: 'school', name: 'School', color: '#8a5cd6', folder: '' },
+      { id: 'groc', name: 'Groceries', color: '#e08600', folder: '' },
+    ],
+    tasks: [],
+    habits: [hb('Drink 8 glasses of water', 'Water', '#2f8fb0'), hb('Read 20 minutes', 'Read', '#8a5cd6'), hb('Stretch', 'Stretch', '#0b8a68'), hb('No phone after 11', 'No phone', '#e08600')],
+    pomos: [], settings: {}, pristine: true,
+  });
+}
+function load() {
+  try { const raw = lsGet(KEY); if (raw) return migrate(JSON.parse(raw)); } catch (e) {}
+  return seed();
+}
+let S = load();
+let REV = 1;
+let snap = {};
+const recJson = x => JSON.stringify({ ...x, updatedAt: 0, remindedAt: 0 });
+function snapshot() {
+  snap = {};
+  for (const k of ENT) for (const x of S[k]) snap[k + ':' + x.id] = recJson(x);
+  snap.settings = recJson(S.settings);
+}
+function stamp() {
+  const now = Date.now(), seen = new Set();
+  S.tombs ??= {};
+  for (const k of ENT) for (const x of S[k]) {
+    const key = k + ':' + x.id, j = recJson(x);
+    seen.add(key);
+    if (snap[key] !== j) { x.updatedAt = now; snap[key] = j; }
+  }
+  for (const key of Object.keys(snap)) if (key !== 'settings' && !seen.has(key)) { S.tombs[key] = now; delete snap[key]; }
+  const sj = recJson(S.settings);
+  if (snap.settings !== sj) { S.settings.updatedAt = now; snap.settings = sj; }
+  for (const [k, t] of Object.entries(S.tombs)) if (now - t > 90 * 864e5) delete S.tombs[k];
+}
+function mergeStates(a, b) {
+  const out = { ...a };
+  const tombs = { ...(a.tombs || {}) };
+  for (const [k, v] of Object.entries(b.tombs || {})) tombs[k] = Math.max(tombs[k] || 0, v);
+  for (const k of ENT) {
+    const m = new Map();
+    for (const x of a[k] || []) m.set(x.id, x);
+    for (const x of b[k] || []) { const y = m.get(x.id); if (!y || (x.updatedAt || 0) > (y.updatedAt || 0)) m.set(x.id, x); }
+    out[k] = [...m.values()].filter(x => { const t = tombs[k + ':' + x.id]; return !(t && t >= (x.updatedAt || 0)); });
+  }
+  out.settings = ((b.settings || {}).updatedAt || 0) > ((a.settings || {}).updatedAt || 0) ? { ...b.settings } : a.settings;
+  out.tombs = tombs;
+  return out;
+}
+function writeLocal() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function saveData() {
+  S.pristine = false;
+  stamp();
+  writeLocal();
+  REV++;
+  if (SYNC.user) { setStatus('syncing'); schedule(1200); }
+}
+snapshot();
+
+// Doable record <-> the shape the screens use (due = day offset from today, time = minutes)
+function toHQ(r) {
+  return { id: r.id, title: r.title || '', list: r.listId || 'inbox', due: r.due ? offYmd(r.due) : null, time: r.time ? toMins(r.time) : null,
+    dur: r.duration || (r.kind === 'event' ? 60 : 30), prio: r.priority || 0, done: r.status === 'done',
+    subs: (r.subtasks || []).map(x => ({ t: x.title, d: !!x.done })), tags: r.tags || [], planId: r.planId || null, ev: r.kind === 'event' };
+}
+function applyHQ(r, f) {
+  if ('title' in f) r.title = f.title;
+  if ('list' in f) r.listId = f.list;
+  if ('due' in f) r.due = f.due == null ? null : ymdOff(f.due);
+  if ('time' in f) r.time = f.time == null ? null : hmOf(f.time);
+  if ('dur' in f) r.duration = f.dur;
+  if ('prio' in f) r.priority = f.prio;
+  if ('done' in f) { r.status = f.done ? 'done' : 'open'; r.completedAt = f.done ? Date.now() : null; }
+  if ('subs' in f) r.subtasks = f.subs.map((x, i) => ({ id: (r.subtasks && r.subtasks[i] && r.subtasks[i].id) || uid(), title: x.t, done: !!x.d }));
+  if ('tags' in f) r.tags = f.tags;
+}
+const newRecord = o => ({ id: uid(), title: '', notes: '', listId: 'inbox', due: null, time: null, priority: 0, tags: [], subtasks: [], status: 'open',
+  createdAt: Date.now(), order: Date.now() + Math.random(), repeat: '', reminder: '', section: null, deleted: false, ...o });
+function nextDue(t) {
+  const d = t.due || todayStr();
+  switch (t.repeat) {
+    case 'daily': return addDays(d, 1);
+    case 'weekly': return addDays(d, 7);
+    case 'weekdays': { let n = addDays(d, 1); while ([0, 6].includes(parseYmd(n).getDay())) n = addDays(n, 1); return n; }
+    case 'monthly': { const x = parseYmd(d), day = x.getDate(); x.setDate(1); x.setMonth(x.getMonth() + 1); x.setDate(Math.min(day, new Date(x.getFullYear(), x.getMonth() + 1, 0).getDate())); return ymd(x); }
+    case 'yearly': { const x = parseYmd(d); x.setFullYear(x.getFullYear() + 1); return ymd(x); }
+  }
+  return null;
+}
+let PROJ = null, PROJKEY = '';
+function project() {
+  const key = REV + '|' + BASE.getTime();
+  if (PROJ && PROJKEY === key) return PROJ;
+  LISTS = S.lists.map((l, i) => ({ id: l.id, name: l.name, c: HQC[l.id] || PAL[i % PAL.length] }));
+  HABITS = S.habits.filter(h => !h.archived).map(h => ({ id: h.id, name: h.name, short: h.short || shortName(h.name) }));
+  const all = S.tasks.filter(t => !t.deleted && (t.status === 'open' || t.status === 'done')).map(toHQ);
+  const hlog = new Set();
+  for (const h of S.habits) for (const d of Object.keys(h.log || {})) if (h.log[d]) hlog.add(h.id + '|' + offYmd(d));
+  PROJ = { all, tasks: all.filter(t => !t.ev), hlog };
+  PROJKEY = key;
+  return PROJ;
+}
+
+/* ---------- sync with Doable's server ---------- */
+const POLL_MS = 20000;
+const SYNC = { user: null, status: 'off', version: 0, busy: false, again: false, timer: null, last: 0, ready: false, online: location.protocol.startsWith('http') };
+let onSync = () => {};
+const pick = s => Object.fromEntries(SYNC_KEYS.map(k => [k, s[k]]));
+const stable = v => Array.isArray(v) ? '[' + v.map(stable).join(',') + ']'
+  : v && typeof v === 'object' ? '{' + Object.keys(v).sort().filter(k => v[k] !== undefined).map(k => JSON.stringify(k) + ':' + stable(v[k])).join(',') + '}'
+  : JSON.stringify(v ?? null);
+async function api(path, method = 'GET', body) {
+  const r = await fetch(path, { method, credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json', 'X-Doable': '1' }, body: body ? JSON.stringify(body) : undefined });
+  let j = null;
+  try { j = await r.json(); } catch (e) {}
+  if (!r.ok) { const e = new Error((j && j.error) || `Request failed (${r.status})`); e.status = r.status; throw e; }
+  return j;
+}
+function setStatus(st) { SYNC.status = st; if (st === 'synced') SYNC.last = Date.now(); onSync(); }
+function applyRemote(remote, replace) {
+  if ((remote.epoch || 0) > (S.epoch || 0)) replace = true;
+  const merged = replace ? { ...remote } : mergeStates(S, remote);
+  S = migrate({ ...S, ...merged, pristine: false });
+  snapshot(); writeLocal(); REV++;
+}
+async function syncNow() {
+  if (!SYNC.user) return;
+  if (SYNC.busy) { SYNC.again = true; return; }
+  SYNC.busy = true;
+  clearTimeout(SYNC.timer); SYNC.timer = null;
+  setStatus('syncing');
+  try {
+    for (let attempt = 0; ; attempt++) {
+      if (attempt > 6) throw new Error('Too many conflicting saves');
+      const row = await api('/api/data');
+      if (row.data) applyRemote(row.data, S.pristine);
+      const body = pick(S);
+      if (row.data && stable(row.data) === stable(body)) { SYNC.version = row.version; break; }
+      try { const r = await api('/api/data', 'PUT', { data: body, version: row.version }); SYNC.version = r.version; break; }
+      catch (e) { if (e.status !== 409) throw e; }
+    }
+    setStatus('synced');
+  } catch (e) {
+    if (e.status === 401) { SYNC.user = null; setStatus('off'); return; }
+    console.warn('Sync failed:', e.message);
+    setStatus(navigator.onLine === false || e instanceof TypeError ? 'offline' : 'error');
+  } finally {
+    SYNC.busy = false;
+    if (SYNC.again) { SYNC.again = false; schedule(300); }
+  }
+}
+function schedule(ms) { clearTimeout(SYNC.timer); SYNC.timer = setTimeout(syncNow, ms); }
+async function poll() {
+  if (!SYNC.user || SYNC.busy || document.hidden) return;
+  try {
+    const r = await api('/api/data?v=' + SYNC.version);
+    if (!r.unchanged) syncNow();
+    else if (SYNC.status !== 'synced' && !SYNC.timer) setStatus('synced');
+  } catch (e) { if (e.status === 401) { SYNC.user = null; setStatus('off'); } else setStatus('offline'); }
+}
+async function startSession(user) {
+  if (SYNC.user && SYNC.user.id === user.id) return;
+  const owner = lsGet(OWNER);
+  if (owner && owner !== user.id && !S.pristine) {
+    const keep = confirm('This device has tasks from a different account.\n\nOK = keep them and add them to this account\nCancel = clear this device and start from this account');
+    if (!keep) { S = seed(); snapshot(); writeLocal(); REV++; }
+  }
+  lsSet(OWNER, user.id);
+  SYNC.user = { id: user.id, email: user.email };
+  SYNC.version = 0;
+  await syncNow();
+}
+function clearDevice() {
+  SYNC.user = null; SYNC.version = 0;
+  clearTimeout(SYNC.timer); SYNC.timer = null;
+  lsSet(OWNER, null); lsSet(KEY, null);
+  S = seed(); snapshot(); REV++;
+  setStatus('off');
+}
+let syncStarted = false;
+async function initSync() {
+  if (syncStarted) return; syncStarted = true;
+  if (SYNC.online) {
+    setInterval(poll, POLL_MS);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) poll(); });
+    addEventListener('online', () => syncNow());
+    try { const u = await api('/api/auth'); await startSession(u); }
+    catch (e) { if (e.status !== 401) console.warn('Sync not available:', e.message); }
+  }
+  SYNC.ready = true; onSync();
+}
+
+/* ---------- deadline plans (same records as Doable's Plans) ---------- */
+const planChunks = p => S.tasks.filter(t => t.planId === p.id && !t.deleted);
+const planDoneMins = p => planChunks(p).filter(t => t.status === 'done').reduce((a, t) => a + (t.duration || p.session), 0);
+function planState(p) {
+  const T = todayStr(), done = Math.min(p.total, planDoneMins(p)), left = Math.max(0, p.total - done);
+  const daysLeft = Math.max(0, Math.round((parseYmd(p.due) - parseYmd(T)) / 864e5));
+  const perDay = left / Math.max(1, daysLeft);
+  const status = left === 0 ? 'done' : p.due < T ? 'late' : perDay > 4 * 60 ? 'behind' : 'ok';
+  return { done, left, daysLeft, perDay, status };
+}
+// rebuild the open, untimed sessions from today to the day before the deadline
+function replan(p) {
+  const T = todayStr(), start = new Date().getHours() >= 20 ? addDays(T, 1) : T;
+  const chunks = planChunks(p);
+  const keep = chunks.filter(t => t.status === 'open' && t.time && t.due >= T);
+  const drop = chunks.filter(t => t.status === 'open' && !keep.includes(t));
+  const missed = drop.filter(t => t.due < T).length;
+  S.tasks = S.tasks.filter(t => !drop.includes(t));
+  const remaining = Math.max(0, p.total - planDoneMins(p) - keep.reduce((a, t) => a + (t.duration || p.session), 0));
+  const last = p.due > start ? addDays(p.due, -1) : start;
+  const days = [];
+  for (let d = start; d <= last; d = addDays(d, 1)) if (!(p.skipWeekends && [0, 6].includes(parseYmd(d).getDay()))) days.push(d);
+  if (!days.length) days.push(start);
+  const n = Math.ceil(remaining / p.session), base = Math.floor(n / days.length), extra = n % days.length;
+  let k = planChunks(p).length;
+  days.forEach((d, i) => {
+    for (let j = 0; j < base + (i < extra ? 1 : 0); j++) {
+      k++;
+      S.tasks.push(newRecord({ id: p.id + '-' + uid(), title: `${p.title} · session ${k}`, listId: p.listId || 'inbox', due: d, duration: p.session, estimate: p.session, priority: 2, order: Date.now() + k, planId: p.id }));
+    }
+  });
+  p.replannedOn = T;
+  return missed;
+}
+
+
+class Component extends DCLogic {
+  state = { tab: 'home', view: 'today', hPeriod: 'week', hCur: 0, hSel: null, sheet: null, detailId: null, draft: '', toast: null, showDone: false,
+    calDay: 0, preset: 25, remaining: 25 * 60, running: false, endAt: 0, focusTask: null, energy: 1, free: 1, pickIdx: 0, rev: 0,
+    auth: { mode: 'in', email: lsGet('hq.lastEmail') || '', password: '', code: '', msg: '', busy: false }, planDraft: null, feedUrl: null, recovery: null };
+  componentDidMount() {
+    onSync = () => this.setState({ rev: REV });
+    refreshClock(); this._min = NOW;
+    this.tick = setInterval(() => {
+      const newDay = refreshClock();
+      if (newDay) { this.autoReplan(); this.setState({ rev: REV }); }
+      else if (NOW !== this._min) { this._min = NOW; this.setState({ rev: REV }); }
+      if (!this.state.running) return;
+      const left = Math.ceil((this.state.endAt - Date.now()) / 1000);
+      if (left > 0) { if (left !== this.state.remaining) this.setState({ remaining: left }); return; }
+      const st = this.state;
+      if (st.preset > 5) { S.pomos.push({ id: uid(), end: Date.now(), mins: st.preset, kind: 'pomo', taskId: st.focusTask || '' }); saveData(); }
+      this.setState({ running: false, remaining: st.preset * 60, rev: REV });
+      this.flash({ msg: 'Session done. Take a breather.' });
+    }, 1000);
+    initSync().then(() => this.autoReplan());
+  }
+  componentWillUnmount() { clearInterval(this.tick); clearTimeout(this.tt); onSync = () => {}; }
+  flash(toast) { clearTimeout(this.tt); this.setState({ toast }); this.tt = setTimeout(() => this.setState({ toast: null }), 3200); }
+  commit() { saveData(); this.setState({ rev: REV }); }
+  rec(id) { return S.tasks.find(x => x.id === id); }
+  upd(id, f) { const r = this.rec(id); if (!r) return; applyHQ(r, f(toHQ(r))); this.commit(); }
+  keepUndo() { this.undoSnap = JSON.stringify({ tasks: S.tasks, plans: S.plans }); }
+  toggle(id) {
+    const r = this.rec(id); if (!r) return;
+    if (r.status !== 'open') { r.status = 'open'; r.completedAt = null; this.commit(); return; }
+    this.keepUndo();
+    r.status = 'done'; r.completedAt = Date.now();
+    if (r.repeat && nextDue(r)) {
+      const n = JSON.parse(JSON.stringify(r));
+      Object.assign(n, { id: uid(), status: 'open', completedAt: null, due: nextDue(r), createdAt: Date.now(), remindedAt: null });
+      n.subtasks = (n.subtasks || []).map(x => ({ ...x, id: uid(), done: false }));
+      S.tasks.push(n);
+    }
+    this.commit();
+    this.flash({ msg: `Done: ${r.title}`, undo: true });
+  }
+  go = tab => this.setState({ tab, sheet: null });
+  open = sheet => this.setState({ draftDue: undefined, duePicker: false, sheet, draft: sheet === 'add' ? '' : this.state.draft, pickIdx: 0 });
+  add() {
+    const p = parse(this.state.draft); if (!p.title) return;
+    if (this.state.draftDue !== undefined && this.state.draftDue !== 'none') p.due = this.state.draftDue; if (this.state.draftDue === 'none') p.due = null;
+    const r = newRecord({ title: p.title, listId: p.list, priority: p.prio, tags: p.tags });
+    applyHQ(r, { due: p.due, time: p.time });
+    if (p.time != null && S.settings.hqRemind !== false) r.reminder = '0';
+    S.tasks.push(r);
+    saveData();
+    this.setState({ sheet: null, draft: '', draftDue: undefined, duePicker: false, rev: REV });
+    this.flash({ msg: `Added to ${lc(p.list).name} · ${dayLabel(p.due)}${p.time != null ? ' ' + tm(p.time) : ''}` });
+  }
+  setTimer(f) {
+    const st = { ...this.state, ...f };
+    if (st.running) f.endAt = Date.now() + st.remaining * 1000;
+    this.setState(f);
+  }
+  autoReplan() {
+    if (SYNC.user && SYNC.status !== 'synced') return;
+    const T = todayStr();
+    if (lsGet('hq.replanDay') === T) return;
+    lsSet('hq.replanDay', T);
+    let moved = 0;
+    for (const p of S.plans.filter(p => !p.archived)) if (planChunks(p).some(t => t.status === 'open' && t.due < T)) moved += replan(p);
+    if (moved) { this.commit(); this.flash({ msg: `Re-planned: moved ${moved} missed session${moved > 1 ? 's' : ''} forward` }); }
+  }
+  taskVM(t) {
+    const over = t.due != null && t.due < 0 && !t.done;
+    const meta = [lc(t.list).name, t.due != null ? dayLabel(t.due) + (t.time != null ? ' ' + tm(t.time) : '') : null, t.subs.length ? `${t.subs.filter(x => x.d).length}/${t.subs.length}` : null, ...(t.tags || []).map(g => '#' + g)].filter(Boolean).join(' · ');
+    return { id: t.id, title: t.title, done: t.done, meta: over ? 'Overdue · ' + meta : meta, dot: lc(t.list).c,
+      ring: t.done ? '#5c5c5c' : PRING[t.prio], checkBg: t.done ? '#5c5c5c' : 'transparent',
+      titleColor: t.done ? '#5c5c5c' : '#f5f5f5', deco: t.done ? 'line-through' : 'none', metaColor: over ? '#e8e8e8' : '#7a7a7a',
+      toggle: () => this.toggle(t.id), open: () => this.setState({ sheet: 'detail', detailId: t.id }) };
+  }
+  sortT(a) { return [...a].sort((x, y) => (x.done - y.done) || ((x.due ?? 99) - (y.due ?? 99)) || ((x.time ?? 2000) - (y.time ?? 2000)) || (y.prio - x.prio)); }
+  inView(v, t) {
+    if (v === 'today') return t.due != null && t.due <= 0;
+    if (v === 'tomorrow') return t.due === 1;
+    if (v === 'week') return t.due != null && t.due <= 6;
+    return t.list === v;
+  }
+  picks() {
+    const s = this.state, open = project().tasks.filter(t => !t.done && t.due != null && t.due <= 2);
+    const want = [1, 2, 3][s.energy];
+    return [...open].sort((a, b) => Math.abs(a.prio - want) - Math.abs(b.prio - want) || (a.due - b.due));
+  }
+
+  calVals(s, tasks) {
+    const mode = s.calMode || 'day', day = s.calDay, cm = s.calMonth ?? dateOf(0).getMonth(), cy = s.calYear ?? dateOf(0).getFullYear();
+    const openD = t => () => this.setState({ sheet: 'detail', detailId: t.id });
+    const weekStart = day - dow(day);
+    const n = mode === 'day' ? 1 : mode === '3day' ? 3 : 7, start = mode === 'week' ? weekStart : day;
+    const cols = Array.from({ length: n }, (_, i) => {
+      const off = start + i, d = dateOf(off), sel = off === day && mode !== 'day';
+      return { dow: DOWS[d.getDay()].slice(0, n === 7 ? 1 : 3), date: d.getDate(), isToday: off === 0,
+        color: off === 0 ? '#f5f5f5' : '#9e9e9e', bg: off === 0 ? '#f5f5f5' : 'transparent', numColor: off === 0 ? '#000' : '#e0e0e0', colBg: off === 0 && n > 1 ? '#070707' : 'transparent',
+        pick: () => this.setState({ calMode: 'day', calDay: off }),
+        allDay: tasks.filter(t => t.due === off && t.time == null && !t.done).slice(0, n === 7 ? 1 : 2).map(t => ({ title: t.title, color: lc(t.list).c, open: openD(t) })),
+        blocks: tasks.filter(t => t.due === off && t.time != null).map(t => ({ title: t.title, sub: n === 7 ? '' : `${tm(t.time)}${n === 1 ? ' · ' + lc(t.list).name : ''}`, size: n === 7 ? '10px' : '12.5px',
+          top: t.time * PXM + 'px', height: Math.max(t.dur * PXM - 2, 22) + 'px', bg: t.done ? '#0c0c0c' : '#1c1c1c', color: lc(t.list).c, deco: t.done ? 'line-through' : 'none', open: openD(t) })) };
+    });
+    const first = new Date(cy, cm, 1), lead = first.getDay(), dim = new Date(cy, cm + 1, 0).getDate(), rows = Math.ceil((lead + dim) / 7);
+    const monthCells = Array.from({ length: rows * 7 }, (_, i) => {
+      const off = offOf(cy, cm, 1 - lead + i), d = dateOf(off), inM = d.getMonth() === cm, its = tasks.filter(t => t.due === off && !t.done), sel = off === day;
+      return { date: d.getDate(), h: rows > 5 ? '54px' : '64px', items: its.slice(0, rows > 5 ? 1 : 2).map(t => ({ title: t.title, color: lc(t.list).c })), more: its.length > (rows > 5 ? 1 : 2) ? '+' + (its.length - (rows > 5 ? 1 : 2)) : '',
+        color: off === 0 ? '#000' : inM ? '#e8e8e8' : '#3a3a3a', numBg: off === 0 ? '#f5f5f5' : 'transparent', bg: sel ? '#141414' : 'transparent', border: sel ? '#333' : '#121212',
+        pick: () => this.setState({ calDay: off }) };
+    });
+    const agenda = this.sortT(tasks.filter(t => t.due === day)).map(t => ({ title: t.title, time: t.time != null ? tm(t.time) : 'all-day', color: lc(t.list).c, tc: t.done ? '#5c5c5c' : '#f0f0f0', deco: t.done ? 'line-through' : 'none', open: openD(t) }));
+    const yearMonths = MON.map((name, mi) => {
+      const l = new Date(cy, mi, 1).getDay(), dm = new Date(cy, mi + 1, 0).getDate();
+      return { name: name.slice(0, 3), color: cy === BASE.getFullYear() && mi === BASE.getMonth() ? '#f5f5f5' : '#9e9e9e', pick: () => this.setState({ calMode: 'month', calMonth: mi }),
+        days: [...Array(l).fill(null), ...Array.from({ length: dm }, (_, i) => i + 1)].map(dd => { if (!dd) return { n: '', bg: 'transparent', color: 'transparent' }; const off = offOf(cy, mi, dd), has = tasks.some(t => t.due === off && !t.done);
+          return { n: dd, bg: off === 0 ? '#f5f5f5' : has ? '#2a2a2a' : 'transparent', color: off === 0 ? '#000' : has ? '#f5f5f5' : '#6b6b6b' }; }) };
+    });
+    const step = dir => {
+      if (mode === 'month') { const d = new Date(cy, cm + dir, 1); return this.setState({ calMonth: d.getMonth(), calYear: d.getFullYear(), calDay: offOf(d.getFullYear(), d.getMonth(), 1) }); }
+      if (mode === 'year') return this.setState({ calYear: cy + dir });
+      const nd = day + dir * n, d = dateOf(nd); this.setState({ calDay: nd, calMonth: d.getMonth(), calYear: d.getFullYear() });
+    };
+    const ad = dateOf(day), aStart = dateOf(start), aEnd = dateOf(start + n - 1);
+    const sub = mode === 'day' ? (day === 0 ? 'Today, ' : '') + DOWS[ad.getDay()] + ', ' + short(day) : mode === 'year' ? 'Tap a month' : mode === 'month' ? `${tasks.filter(t => t.due != null && dateOf(t.due).getMonth() === cm && !t.done).length} open tasks` : `${short(start)} – ${aStart.getMonth() === aEnd.getMonth() ? aEnd.getDate() : short(start + n - 1)}`;
+    return {
+      calModes: [['day', 'Day'], ['3day', '3 Day'], ['week', 'Week'], ['month', 'Month'], ['year', 'Year']].map(([k, label]) => ({ label, bg: mode === k ? '#f5f5f5' : 'transparent', color: mode === k ? '#000' : '#9e9e9e',
+        pick: () => this.setState(k === 'month' ? { calMode: k, calMonth: dateOf(day).getMonth(), calYear: dateOf(day).getFullYear() } : { calMode: k }) })),
+      isDayMode: mode === 'day', isGrid: ['day', '3day', 'week'].includes(mode), isMonth: mode === 'month', isYear: mode === 'year', multiCol: n > 1,
+      gridCols: `46px repeat(${n}, minmax(0,1fr))`, cols,
+      calTitle: mode === 'year' ? String(cy) : mode === 'month' ? MON[cm] : MON[ad.getMonth()], calSub: sub,
+      calPrev: () => step(-1), calNext: () => step(1), calToday: () => this.setState({ calDay: 0, calMonth: dateOf(0).getMonth(), calYear: dateOf(0).getFullYear() }),
+      weekDays: Array.from({ length: 7 }, (_, i) => { const off = weekStart + i, on = day === off, has = tasks.some(t => t.due === off && !t.done); return { dow: DOWS[dow(off)].slice(0, 1), date: dateOf(off).getDate(), bg: on ? '#f5f5f5' : off === 0 ? '#111' : 'transparent', color: on ? '#000' : off === 0 ? '#f5f5f5' : '#9e9e9e', border: on ? '#f5f5f5' : '#161616', dot: has ? (on ? '#000' : '#7a7a7a') : 'transparent', pick: () => this.setState({ calDay: off }) }; }),
+      hours: Array.from({ length: 24 }, (_, i) => ({ top: i * 50 + 8 + 'px', label: i === 0 ? '12am' : tm(i * 60) })),
+      nowTop: NOW * PXM + 'px', hasAllDay: cols.some(c => c.allDay.length),
+      calScroll: el => { if (el && el !== this._cs) { this._cs = el; el.scrollTop = 7 * 50 + 4; } },
+      dowHead: ['S', 'M', 'T', 'W', 'T', 'F', 'S'], monthCells,
+      agendaLabel: (day === 0 ? 'Today · ' : '') + DOWS[ad.getDay()] + ', ' + short(day), agenda, agendaEmpty: !agenda.length, yearMonths,
+    };
+  }
+  habitChart(s) {
+    const H = Math.max(1, HABITS.length), cnt = off => off > 0 ? null : HABITS.filter(hb => s.hlog.has(hb.id + '|' + off)).length;
+    const p = ['day', 'week', 'month', 'year'].includes(s.hPeriod) ? s.hPeriod : 'week', cur = s.hCur || 0, pts = []; let title, cap;
+    const monthSum = (y, m) => { let t = 0; const dim = new Date(y, m + 1, 0).getDate(); for (let d = 1; d <= dim; d++) { const o = offOf(y, m, d); if (o <= 0) t += cnt(o); } return t; };
+    if (p === 'day') { title = (cur === 0 ? 'Today, ' : '') + DOWS[dow(cur)] + ', ' + short(cur); }
+    else if (p === 'week') { const st = cur - dow(cur); for (let i = 0; i < 7; i++) { const o = st + i; pts.push({ tick: DOWS[dow(o)].slice(0, 3), label: DOWS[dow(o)] + ', ' + short(o), value: cnt(o), now: o === 0 }); } title = short(st) + ' – ' + short(st + 6); cap = H; }
+    else if (p === 'month') { const d0 = dateOf(cur), y = d0.getFullYear(), m = d0.getMonth(), dim = new Date(y, m + 1, 0).getDate(); for (let d = 1; d <= dim; d++) { const o = offOf(y, m, d); pts.push({ tick: [1, 8, 15, 22, 29].includes(d) ? MON[m].slice(0, 3) + ' ' + d : '', label: MON[m].slice(0, 3) + ' ' + d, value: cnt(o), now: o === 0 }); } title = MON[m] + ' ' + y; cap = H; }
+    else { const y = BASE.getFullYear() + cur; for (let m = 0; m < 12; m++) { const fut = offOf(y, m, 1) > 0; pts.push({ tick: m % 2 === 0 ? MON[m].slice(0, 3) : '', label: MON[m] + ' ' + y, value: fut ? null : monthSum(y, m), now: y === BASE.getFullYear() && m === BASE.getMonth() }); } title = String(y); cap = H * 31; }
+    const n = pts.length, vals = pts.map(x => x.value).filter(v => v != null);
+    let max, ticks;
+    if (p === 'year') { const top = Math.max(10, ...vals); const step = top <= 40 ? 10 : top <= 80 ? 20 : 40; max = Math.ceil(top * 1.1 / step) * step; ticks = []; for (let v = 0; v <= max; v += step) ticks.push(v); }
+    else { max = H; ticks = niceTicks(H); }
+    const line = pts.map((x, i) => x.value == null ? null : `${(i + .5) * 10},${100 - x.value / max * 100}`).filter(Boolean);
+    const lastIdx = pts.map(x => x.value != null).lastIndexOf(true);
+    const area = line.length > 1 ? `${line[0].split(',')[0]},100 ${line.join(' ')} ${(lastIdx + .5) * 10},100` : '';
+    const left = i => ((i + .5) / n * 100) + '%', bottom = v => (v / max * 100) + '%';
+    const sel = s.hSel != null && pts[s.hSel] && pts[s.hSel].value != null ? s.hSel : null;
+    const atNow = p === 'day' ? cur >= 0 : p === 'week' ? cur - dow(cur) + 6 >= 0 : p === 'month' ? (() => { const d = dateOf(cur), by = BASE.getFullYear(); return d.getFullYear() > by || (d.getFullYear() === by && d.getMonth() >= BASE.getMonth()); })() : cur >= 0;
+    const shift = dir => { if (dir > 0 && atNow) return; this.setState(st => { const c = st.hCur || 0; if (p === 'day') return { hCur: c + dir, hSel: null }; if (p === 'week') return { hCur: c + 7 * dir, hSel: null }; if (p === 'year') return { hCur: c + dir, hSel: null }; const d = dateOf(c); return { hCur: offOf(d.getFullYear(), d.getMonth() + dir, 1), hSel: null }; }); };
+    const total = vals.reduce((a, v) => a + v, 0), possible = p === 'year' ? vals.length ? pts.reduce((a, x, i) => a + (x.value == null ? 0 : H * Math.min(new Date(BASE.getFullYear() + cur, i + 1, 0).getDate(), i === BASE.getMonth() && cur === 0 ? BASE.getDate() : 99)), 0) : 1 : vals.length * H;
+    const best = vals.length ? Math.max(...vals) : 0;
+    const streak = id => { let k = 0; for (let d = cur; d >= cur - 400; d--) { if (s.hlog.has(id + '|' + d)) k++; else if (d < cur || cur < 0) break; } return k; };
+    const dayDone = HABITS.filter(hb => s.hlog.has(hb.id + '|' + cur)).length;
+    const stats = p === 'day' ? [[`${dayDone}/${H}`, 'done'], [Math.round(100 * dayDone / H) + '%', 'complete'], [Math.max(0, ...HABITS.map(hb => streak(hb.id))) + 'd', 'best streak']]
+      : [[total, 'check-ins'], [Math.round(100 * total / Math.max(1, possible)) + '%', 'complete'], [best, p === 'year' ? 'best month' : 'best day']];
+    return {
+      hcTitle: title, hcPrev: () => shift(-1), hcNext: () => shift(1), hcNextColor: atNow ? '#333' : '#c8c8c8', hcToday: () => this.setState({ hCur: 0, hSel: null }),
+      hcPeriods: [['day', 'Day'], ['week', 'Week'], ['month', 'Month'], ['year', 'Year']].map(([k, label]) => ({ label, bg: p === k ? '#f5f5f5' : 'transparent', color: p === k ? '#000' : '#9e9e9e', pick: () => this.setState({ hPeriod: k, hCur: 0, hSel: null }) })),
+      hcStats: stats.map(([v, l]) => ({ v: String(v), l })),
+      hcIsDay: p === 'day', hcIsChart: p !== 'day',
+      hcDayRows: HABITS.map(hb => { const on = s.hlog.has(hb.id + '|' + cur); let k = 0; for (let d = cur; d > cur - 30; d--) if (s.hlog.has(hb.id + '|' + d)) k++; return { name: hb.short, pct: Math.round(k / 30 * 100) + '%', v: k + '/30', bar: on ? '#f5f5f5' : '#6b6b6b', color: on ? '#f5f5f5' : '#7a7a7a' }; }),
+      hcDayNote: 'white = done that day',
+      hcTicks: (ticks || []).map(v => ({ v, pct: bottom(v) })),
+      hcViewBox: `0 0 ${Math.max(1, n) * 10} 100`, hcLine: line.join(' '), hcArea: area,
+      hcDots: pts.map((x, i) => x.value == null ? null : { left: left(i), bottom: bottom(x.value), size: sel === i ? '11px' : n > 20 ? '5px' : '8px', bg: sel === i || x.now ? '#f5f5f5' : '#8a8a8a', aria: x.label, pick: () => this.setState({ hSel: sel === i ? null : i }) }).filter(Boolean),
+      hcTip: sel != null ? { left: left(sel), bottom: bottom(pts[sel].value), shift: sel < n * 0.2 ? '-12%' : sel > n * 0.8 ? '-88%' : '-50%', text: `${pts[sel].label}: ${pts[sel].value}${p === 'year' ? '' : '/' + H}` } : null,
+      hcX: pts.map((x, i) => ({ label: x.tick, left: left(i), color: x.now ? '#f5f5f5' : '#5c5c5c', weight: x.now ? '700' : '500' })).filter(x => x.label),
+    };
+  }
+  searchVals(s, tasks) {
+    const q = (s.q || '').trim(), words = q.toLowerCase().split(/\s+/).filter(Boolean), flt = s.sFilter || 'all';
+    const hit = hay => words.every(w => hay.toLowerCase().includes(w.replace(/^#/, '')));
+    const parts = str => { if (!words.length) return [{ s: str }]; const esc = words.map(w => w.replace(/^#/, '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).filter(Boolean); if (!esc.length) return [{ s: str }]; const re = new RegExp('(' + esc.join('|') + ')', 'ig'); return str.split(re).filter(Boolean).map(x => ({ s: x, m: re.test(x) && (re.lastIndex = 0, true) })); };
+    const style = (arr, done) => arr.map(x => ({ s: x.s, bg: x.m ? '#f5f5f5' : 'transparent', color: x.m ? '#000' : 'inherit', pad: x.m ? '0 2px' : '0' }));
+    const tHits = words.length ? this.sortT(tasks.filter(t => hit([t.title, lc(t.list).name, ...(t.tags || []).map(g => '#' + g), ...t.subs.map(x => x.t)].join(' ')))) : [];
+    const hHits = words.length ? HABITS.filter(hb => hit(hb.name + ' ' + hb.short)) : [];
+    const tItems = tHits.map(t => { const sub = t.subs.find(x => words.some(w => x.t.toLowerCase().includes(w))); return { parts: style(parts(t.title)), tc: t.done ? '#5c5c5c' : '#f0f0f0', deco: t.done ? 'line-through' : 'none', radius: '12px', ring: t.done ? '#5c5c5c' : PRING[t.prio], fill: t.done ? '#5c5c5c' : 'transparent',
+      meta: [lc(t.list).name, t.due != null ? dayLabel(t.due) + (t.time != null ? ' ' + tm(t.time) : '') : null, t.done ? 'Completed' : null, sub ? 'Subtask: ' + sub.t : null, ...(t.tags || []).map(g => '#' + g)].filter(Boolean).join(' · '),
+      open: () => this.setState({ sheet: 'detail', detailId: t.id }) }; });
+    const streakOf = id => { let n = 0; for (let d = 0; d >= -400; d--) { if (s.hlog.has(id + '|' + d)) n++; else if (d < 0) break; } return n; };
+    const hItems = hHits.map(hb => { const on = s.hlog.has(hb.id + '|0'); return { parts: style(parts(hb.name)), tc: '#f0f0f0', deco: 'none', radius: '7px', ring: on ? '#f5f5f5' : '#3a3a3a', fill: on ? '#f5f5f5' : 'transparent', meta: `Habit · ${streakOf(hb.id)} day streak · ${on ? 'done today' : 'not done today'}`, open: () => this.go('habits') }; });
+    const groups = [['Tasks', tItems, 'tasks'], ['Habits', hItems, 'habits']].filter(g => (flt === 'all' || flt === g[2]) && g[1].length).map(([label, items]) => ({ label, n: items.length, items }));
+    return { isSearch: s.tab === 'search', q: s.q || '', onQ: e => this.setState({ q: e.target.value }), clearQ: () => this.setState({ q: '' }),
+      goSearch: () => this.setState({ tab: 'search', q: '' }),
+      sFilters: [['all', 'All', tItems.length + hItems.length], ['tasks', 'Tasks', tItems.length], ['habits', 'Habits', hItems.length]].map(([k, label, n]) => { const on = flt === k; return { label, n: words.length ? n : '', bg: on ? '#f5f5f5' : '#0b0b0b', color: on ? '#000' : '#c8c8c8', border: on ? '#f5f5f5' : '#1f1f1f', pick: () => this.setState({ sFilter: k }) }; }),
+      sIdle: !words.length, sSuggest: ['chem', 'read', 'water', 'school', 'call'].map(label => ({ label, pick: () => this.setState({ q: label }) })),
+      sGroups: groups, sNone: words.length > 0 && !groups.length };
+  }
+  /* ---------- Eisenhower matrix: urgent = due within 2 days (or overdue), important = High or Medium priority ---------- */
+  matrixVals(tasks) {
+    const open = this.sortT(tasks.filter(t => !t.done));
+    const urgent = t => t.due != null && t.due <= 2, important = t => t.prio >= 2;
+    const Q = [
+      ['Do first', 'Urgent · important', t => urgent(t) && important(t)],
+      ['Schedule', 'Important · not urgent', t => !urgent(t) && important(t)],
+      ['Delegate', 'Urgent · not important', t => urgent(t) && !important(t)],
+      ['Eliminate', 'Not urgent · not important', t => !urgent(t) && !important(t)],
+    ];
+    return {
+      isMatrix: this.state.tab === 'matrix',
+      quads: Q.map(([title, sub, f], i) => { const items = open.filter(f); return { title, sub, n: items.length || '', border: i === 0 ? '#2e2e2e' : '#1c1c1c', items: items.map(t => this.taskVM(t)), empty: !items.length }; }),
+    };
+  }
+
+  /* ---------- Plans: a deadline + hours of work, split into daily sessions ---------- */
+  openPlan(id) {
+    const p = id ? S.plans.find(x => x.id === id) : null;
+    const T = todayStr();
+    this.setState({ sheet: 'plan', planDraft: p
+      ? { id: p.id, title: p.title, due: p.due, hours: p.total / 60, session: p.session, listId: p.listId || 'inbox', wk: !!p.skipWeekends, err: '' }
+      : { id: null, title: '', due: addDays(T, 14), hours: 10, session: 60, listId: 'inbox', wk: false, err: '' } });
+  }
+  editDraft(f) { this.setState(s => ({ planDraft: { ...s.planDraft, ...f, err: '' } })); }
+  savePlan() {
+    const d = this.state.planDraft;
+    const title = d.title.trim();
+    if (!title) return this.setState(s => ({ planDraft: { ...s.planDraft, err: 'Give the deadline a name.' } }));
+    if (!d.due || d.due < todayStr()) return this.setState(s => ({ planDraft: { ...s.planDraft, err: 'Pick a deadline from today on.' } }));
+    const data = { title, due: d.due, total: Math.round(d.hours * 60), session: d.session, listId: d.listId, skipWeekends: d.wk };
+    let plan = d.id ? S.plans.find(x => x.id === d.id) : null;
+    if (plan) Object.assign(plan, data); else { plan = { id: uid(), createdAt: Date.now(), ...data }; S.plans.push(plan); }
+    for (const t of planChunks(plan)) if (t.status === 'open' && !t.time) { t.title = t.title.replace(/^.* · session/, `${plan.title} · session`); t.listId = plan.listId; }
+    replan(plan);
+    saveData();
+    this.setState({ sheet: null, planDraft: null, tab: 'plans', rev: REV });
+    this.flash({ msg: `${plan.title}: ${planChunks(plan).filter(t => t.status === 'open').length} sessions planned` });
+  }
+  deletePlan() {
+    const id = this.state.planDraft && this.state.planDraft.id; if (!id) return;
+    this.keepUndo();
+    S.tasks = S.tasks.filter(t => !(t.planId === id && t.status === 'open'));
+    S.plans = S.plans.filter(x => x.id !== id);
+    saveData();
+    this.setState({ sheet: null, planDraft: null, rev: REV });
+    this.flash({ msg: 'Plan deleted', undo: true });
+  }
+  plansVals(P) {
+    const s = this.state, byId = new Map(P.tasks.map(t => [t.id, t]));
+    const plans = S.plans.filter(p => !p.archived).sort((a, b) => a.due.localeCompare(b.due));
+    const T = todayStr();
+    const todayN = S.tasks.filter(t => t.planId && !t.deleted && t.status === 'open' && t.due <= T).length;
+    const pill = { done: ['#1c1c1c', '#7a7a7a'], late: ['#ededed', '#000'], behind: ['#ededed', '#000'], ok: ['#141414', '#c8c8c8'] };
+    const d = s.planDraft;
+    const tog = on => ({ track: on ? '#f5f5f5' : '#262626', knob: on ? '#000' : '#7a7a7a', justify: on ? 'flex-end' : 'flex-start' });
+    const step = h => h < 5 ? 0.5 : 1;
+    return {
+      isPlans: s.tab === 'plans', newPlan: () => this.openPlan(null), plansEmpty: !plans.length,
+      plansSub: plans.length ? `${plans.length} active · ${todayN} session${todayN === 1 ? '' : 's'} today` : 'Exams, essays, projects',
+      plans: plans.map(p => {
+        const st = planState(p), pct = Math.round(100 * st.done / Math.max(1, p.total));
+        const next = planChunks(p).filter(t => t.status === 'open').sort((a, b) => a.due.localeCompare(b.due) || (a.time || '').localeCompare(b.time || '')).slice(0, 3).map(t => byId.get(t.id)).filter(Boolean);
+        const label = { done: 'Finished', late: 'Past due', behind: `Behind · ${fmtMins(Math.round(st.perDay))}/day`, ok: `On track · ${fmtMins(Math.round(st.perDay))}/day` }[st.status];
+        return { title: p.title, sub: `Due ${short(offYmd(p.due))} · ${st.daysLeft} day${st.daysLeft === 1 ? '' : 's'} left`, status: label, pillBg: pill[st.status][0], pillColor: pill[st.status][1],
+          pct: pct + '%', doneText: `${fmtMins(st.done)} of ${fmtMins(p.total)} · ${pct}%`, sessions: next.map(t => this.taskVM(t)), noneLeft: !next.length, edit: () => this.openPlan(p.id) };
+      }),
+      pd: d ? {
+        heading: d.id ? 'Edit plan' : 'New plan', title: d.title, onTitle: e => this.editDraft({ title: e.target.value }),
+        due: d.due, minDue: T, onDue: e => this.editDraft({ due: e.target.value }), showPicker: e => { try { e.target.showPicker(); } catch (_) {} }, dueLabel: d.due ? dayLabel(offYmd(d.due)) : 'Pick a date',
+        hours: `${d.hours}h`, minus: () => this.editDraft({ hours: Math.max(0.5, d.hours - step(d.hours - 0.5)) }), plus: () => this.editDraft({ hours: Math.min(500, d.hours + step(d.hours)) }),
+        sessOpts: [25, 45, 60, 90].map(m => ({ label: fmtMins(m), bg: d.session === m ? '#f5f5f5' : 'transparent', color: d.session === m ? '#000' : '#9e9e9e', pick: () => this.editDraft({ session: m }) })),
+        list: lc(d.listId).name, listColor: lc(d.listId).c, cycleList: () => this.editDraft({ listId: LISTS[(LISTS.findIndex(l => l.id === d.listId) + 1) % LISTS.length].id }),
+        wk: tog(d.wk), toggleWk: () => this.editDraft({ wk: !d.wk }),
+        preview: (() => { const days = Math.max(1, Math.round((parseYmd(d.due || T) - parseYmd(T)) / 864e5)); const n = Math.ceil(d.hours * 60 / d.session); return `${n} session${n === 1 ? '' : 's'} of ${fmtMins(d.session)} over ${days} day${days === 1 ? '' : 's'}. Miss one and it moves forward on its own.`; })(),
+        err: d.err, isEdit: !!d.id, go: d.id ? 'Save & re-plan' : 'Make the plan', save: () => this.savePlan(), remove: () => this.deletePlan(),
+      } : {},
+    };
+  }
+
+  /* ---------- account, sync and calendar feed ---------- */
+  setAuth(f) { this.setState(s => ({ auth: { ...s.auth, ...f } })); }
+  async submitAuth() {
+    const a = this.state.auth, email = a.email.trim();
+    if (!SYNC.online) return this.setAuth({ msg: 'Open HQ from its web address to sign in.' });
+    if (!/^\S+@\S+\.\S+$/.test(email)) return this.setAuth({ msg: 'Enter a valid email address.' });
+    if (a.password.length < 8) return this.setAuth({ msg: 'Password needs at least 8 characters.' });
+    if (a.mode === 'reset' && !a.code.trim()) return this.setAuth({ msg: 'Enter your recovery code.' });
+    this.setAuth({ busy: true, msg: '' });
+    try {
+      const user = await api('/api/auth', 'POST', { action: a.mode === 'reset' ? 'reset' : a.mode === 'up' ? 'signup' : 'login', email, password: a.password, code: a.mode === 'reset' ? a.code : undefined });
+      lsSet('hq.lastEmail', email);
+      this.setState({ auth: { mode: 'in', email, password: '', code: '', msg: '', busy: false }, sheet: user.recoveryCode ? 'recovery' : null, recovery: user.recoveryCode || null });
+      await startSession(user);
+      this.autoReplan();
+      if (!user.recoveryCode) this.flash({ msg: `Signed in · syncing as ${email}` });
+    } catch (e) {
+      this.setAuth({ busy: false, msg: e instanceof TypeError ? "Can't reach the server. Check your connection." : e.message });
+    }
+  }
+  async signOut() {
+    if (!confirm('Sign out? Your tasks stay safe in your account; this device will be cleared.')) return;
+    await syncNow();
+    await api('/api/auth', 'POST', { action: 'logout' }).catch(() => {});
+    clearDevice();
+    this.setState({ sheet: null, rev: REV });
+    this.flash({ msg: 'Signed out' });
+  }
+  async openFeed(reset) {
+    if (!SYNC.user) { this.setState({ sheet: 'account' }); return this.setAuth({ msg: 'Sign in first. The calendar feed comes from your account.' }); }
+    if (reset && !confirm('Make a new link? The old link stops working, so calendars using it need the new one.')) return;
+    this.setState({ sheet: 'feed', feedUrl: reset ? null : this.state.feedUrl });
+    try { const { url } = await api('/api/auth', 'POST', { action: 'calendar', reset: !!reset }); this.setState({ feedUrl: url }); }
+    catch (e) { this.setState({ sheet: null }); this.flash({ msg: e.message }); }
+  }
+  copy(text, msg) { (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(() => this.flash({ msg }), () => this.flash({ msg: 'Couldn’t copy. Press and hold the text instead.' })); }
+  accountVals(s) {
+    const a = s.auth, up = a.mode === 'up', reset = a.mode === 'reset';
+    const ago = SYNC.last ? Math.round((Date.now() - SYNC.last) / 60000) : 0;
+    const syncText = !SYNC.ready ? '…' : !SYNC.user ? 'Sign in' : { syncing: 'Syncing…', offline: 'Offline · will retry', error: 'Couldn’t sync', off: 'Sign in' }[SYNC.status] || (ago < 1 ? 'Synced just now' : ago < 60 ? `Synced ${ago}m ago` : 'Synced');
+    return {
+      syncText, openAccount: () => this.setState({ sheet: 'account' }), openFeed: () => this.openFeed(false), feedNote: SYNC.user ? 'Get link' : 'Sign in first',
+      acct: {
+        signedIn: !!SYNC.user, signedOut: !SYNC.user,
+        title: SYNC.user ? 'Account' : reset ? 'Reset password' : up ? 'Create account' : 'Sign in to sync',
+        email: SYNC.user ? SYNC.user.email : '', status: syncText,
+        syncNow: () => syncNow(), signOut: () => this.signOut(),
+        hint: reset ? 'Enter the recovery code you saved when you made your account.' : up ? 'Your tasks, habits and plans sync to your phone and every other device. You get a recovery code: save it, it’s the only way back in if you forget your password.' : 'Everything syncs across your phone and other devices.',
+        emailVal: a.email, onEmail: e => this.setAuth({ email: e.target.value, msg: '' }),
+        pwVal: a.password, onPw: e => this.setAuth({ password: e.target.value, msg: '' }), pwAuto: up || reset ? 'new-password' : 'current-password', pwPh: reset ? 'New password' : 'Password',
+        isReset: reset, codeVal: a.code, onCode: e => this.setAuth({ code: e.target.value, msg: '' }),
+        onKey: e => { if (e.key === 'Enter') this.submitAuth(); },
+        msg: a.msg, go: a.busy ? 'One moment…' : reset ? 'Reset password' : up ? 'Create account' : 'Sign in', submit: () => !a.busy && this.submitAuth(),
+        links: (up || reset ? [['in', 'I already have an account']] : [['up', 'Create an account'], ['reset', 'Forgot password?']]).map(([mode, label]) => ({ label, pick: () => this.setAuth({ mode, msg: '' }) })),
+      },
+      recoveryCode: s.recovery || '', copyCode: () => this.copy(s.recovery || '', 'Recovery code copied'), doneCode: () => this.setState({ sheet: null, recovery: null }),
+      feed: { url: s.feedUrl || '', loading: !s.feedUrl, ready: !!s.feedUrl,
+        apple: () => { if (s.feedUrl) location.href = s.feedUrl.replace(/^https:/, 'webcal:'); },
+        copy: () => this.copy(s.feedUrl || '', 'Link copied'), reset: () => this.openFeed(true), selectAll: e => e.target.select && e.target.select() },
+    };
+  }
+
+  renderVals() {
+    const P = project(), s = { ...this.state, tasks: P.tasks, hlog: P.hlog }, tasks = s.tasks, open = tasks.filter(t => !t.done);
+    const todayAll = this.sortT(tasks.filter(t => t.due != null && t.due <= 0));
+    const todayOpen = todayAll.filter(t => !t.done);
+    const timedT = todayOpen.filter(t => t.time != null && t.time > NOW && t.due === 0).sort((a, b) => a.time - b.time);
+    const nx = timedT[0] || todayOpen[0];
+    const untilM = nx && nx.time != null ? nx.time - NOW : null;
+    const hero = nx ? { label: 'Up next', until: untilM == null ? 'Today' : untilM >= 60 ? `in ${Math.floor(untilM / 60)}h ${untilM % 60}m` : `in ${untilM}m`, color: lc(nx.list).c, title: nx.title, meta: [lc(nx.list).name, nx.time != null ? `${tm(nx.time)}–${tm(nx.time + nx.dur)}` : null].filter(Boolean).join(' · ') } : { label: 'Up next', until: 'Free', color: '#3a3a3a', title: 'Nothing scheduled', meta: 'Enjoy the space' };
+    const upcoming = timedT.filter(t => t !== nx).slice(0, 1).map(t => ({ time: tm(t.time), color: lc(t.list).c, title: t.title }));
+    const hDone = HABITS.filter(h => s.hlog.has(h.id + '|0')).length, HN = Math.max(1, HABITS.length);
+    const streak = id => { let n = 0; for (let d = 0; d >= -30; d--) { if (s.hlog.has(id + '|' + d)) n++; else if (d < 0) break; } return n; };
+    const togH = (id, d) => { const h = S.habits.find(x => x.id === id); if (!h) return; const k = ymdOff(d); if (h.log[k]) delete h.log[k]; else h.log[k] = true; this.commit(); };
+    const VIEWS = [['today', 'Today', '#f5f5f5'], ['tomorrow', 'Tomorrow', '#a8a8a8'], ['week', 'Next 7 days', '#6b6b6b'], ...LISTS.map(l => [l.id, l.name, l.c])];
+    const vName = (VIEWS.find(v => v[0] === s.view) || VIEWS[0])[1];
+    const inV = tasks.filter(t => this.inView(s.view, t));
+    const vOpen = this.sortT(inV.filter(t => !t.done)), vDone = inV.filter(t => t.done);
+    let groups;
+    if (s.view === 'today') groups = [['Overdue', vOpen.filter(t => t.due < 0)], ['Today', vOpen.filter(t => t.due === 0)]];
+    else if (s.view === 'week') groups = [...new Set(vOpen.map(t => t.due))].map(d => [dayLabel(d), vOpen.filter(t => t.due === d)]);
+    else groups = [['', vOpen]];
+    if (s.showDone && vDone.length) groups.push(['Completed', vDone]);
+    groups = groups.filter(g => g[1].length).map(([label, items]) => ({ label, n: items.length, color: label === 'Overdue' ? '#f5f5f5' : '#7a7a7a', items: items.map(t => this.taskVM(t)) }));
+    const blocks = [
+      ...tasks.filter(t => t.due === s.calDay && t.time != null).map(t => ({ title: t.title, sub: `${tm(t.time)} · ${lc(t.list).name}`, m: t.time, dur: t.dur, t })),
+    ].map(b => ({
+      title: b.title, sub: b.sub, top: (b.m - CAL0) * PXM + 'px', height: Math.max(b.dur * PXM - 3, 22) + 'px',
+      bg: b.cls ? '#0c0c0c' : b.t.done ? '#0c0c0c' : '#1c1c1c', color: b.cls ? '#3a3a3a' : lc(b.t.list).c, deco: b.t && b.t.done ? 'line-through' : 'none',
+      open: () => this.setState({ sheet: 'detail', detailId: b.t.id }) }));
+    const allDay = tasks.filter(t => t.due === s.calDay && t.time == null && !t.done).map(t => ({ title: t.title, color: lc(t.list).c, open: () => this.setState({ sheet: 'detail', detailId: t.id }) }));
+    const ft = tasks.find(t => t.id === s.focusTask);
+    const mm = Math.floor(s.remaining / 60), ss = s.remaining % 60, timeText = `${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`;
+    const live = s.running || s.remaining !== s.preset * 60;
+    const dt = P.all.find(t => t.id === s.detailId);
+    const pk = this.picks(), pick = pk[s.pickIdx % Math.max(1, pk.length)];
+    const why = pick ? [pick.due < 0 ? 'It\u2019s overdue' : pick.due === 0 ? 'It\u2019s due today' : `Due ${dayLabel(pick.due)}`, ['matches your energy', 'a light one for low energy', 'good use of a focused mood', 'high priority, worth your best energy'][s.energy === 2 && pick.prio === 3 ? 3 : s.energy === 0 ? 1 : 0], s.free === 0 ? 'and it fits in 15 minutes.' : 'and you have the time.'].join(', ') : '';
+    const seg = (opts, cur, key) => opts.map((label, i) => ({ label, bg: cur === i ? '#f5f5f5' : 'transparent', color: cur === i ? '#000' : '#9e9e9e', pick: () => this.setState({ [key]: i, pickIdx: 0 }) }));
+    const p = parse(s.draft); if (s.draftDue !== undefined) p.due = s.draftDue === 'none' ? null : s.draftDue;
+    const chips = s.draft.trim() ? [{ label: lc(p.list).name, color: lc(p.list).c }, ...(p.due != null ? [{ label: dayLabel(p.due) + (p.time != null ? ' ' + tm(p.time) : ''), color: '#f5f5f5' }] : []), ...(p.prio ? [{ label: PRIO[p.prio] + ' priority', color: PRING[p.prio] }] : []), ...p.tags.map(t => ({ label: '#' + t, color: '#6b6b6b' }))] : [];
+    const tabsDef = [['home', 'Home', ICON.home], ['tasks', 'Tasks', ICON.tasks], ['cal', 'Calendar', ICON.cal], ['focus', live ? timeText : 'Focus', ICON.focus], ['habits', 'Habits', ICON.habit]];
+    return {
+      isHome: s.tab === 'home', isTasks: s.tab === 'tasks', isCal: s.tab === 'cal', isFocus: s.tab === 'focus', isHabits: s.tab === 'habits', isSettings: s.tab === 'settings',
+      setFocusOpts: [25, 50, 90].map(n => ({ label: n + 'm', bg: s.preset === n ? '#f5f5f5' : 'transparent', color: s.preset === n ? '#000' : '#9e9e9e', pick: () => this.setState({ preset: n, remaining: n * 60, running: false }) })),
+      setToggles: [['Show completed tasks', 'showDone'], ['Reminders', 'remind']].map(([label, k]) => { const on = k === 'remind' ? S.settings.hqRemind !== false : !!s[k]; return { label, track: on ? '#f5f5f5' : '#262626', knob: on ? '#000' : '#7a7a7a', justify: on ? 'flex-end' : 'flex-start', toggle: () => { if (k === 'remind') { S.settings.hqRemind = !on; this.commit(); } else this.setState({ [k]: !on }); } }; }),
+      shortcuts: [['due', 'Opens a calendar to pick the date'], ['#tag', 'Adds a tag'], ['^List', 'Puts it in a list'], ['!1 !2 !3', 'High, medium, low priority'], ['3pm', 'Sets a time'], ['tomorrow, fri', 'Sets the day']].map(([key, does], i, a) => ({ key, does, line: i === a.length - 1 ? 'transparent' : '#141414' })),
+      tips: ['Tap the circle to finish a task. Tap Undo if you didn’t mean it.', 'Not sure what to do? “What now?” picks one task for your energy and time.', 'On Focus, tap the task name to search and pick what you’re working on.', 'The focus timer keeps going when you switch tabs.'].map((t, i, a) => ({ t, line: i === a.length - 1 ? 'transparent' : '#141414' })),
+      greeting: NOW < 720 ? 'Good morning' : NOW < 1020 ? 'Good afternoon' : 'Good evening',
+      homeSummary: `${DOWS[dow(0)]}, ${short(0)} · ${todayOpen.length} tasks`,
+      openAdd: () => this.open('add'), openMore: () => this.open('more'), openWhat: () => this.open('what'), closeSheet: () => this.setState({ sheet: null }),
+      goTasks: () => this.setState({ tab: 'tasks', view: 'today' }), goHabits: () => this.go('habits'), goHome: () => this.go('home'),
+      hero, upcoming, todayLeft: `${todayOpen.length} left`, todayMore: todayAll.length > 3 ? `+${todayAll.length - 3} more` : '',
+      homeTasks: todayAll.slice(0, 3).map(t => this.taskVM(t)),
+      habitCount: `${hDone}/${HABITS.length}`,
+      habits: HABITS.map(h => { const on = s.hlog.has(h.id + '|0'); return { short: h.short, on, streak: `${streak(h.id)}d`, color: on ? '#f5f5f5' : '#3a3a3a', box: on ? '#f5f5f5' : 'transparent', bg: on ? '#151515' : '#0b0b0b', border: on ? '#2e2e2e' : '#1a1a1a', toggle: () => togH(h.id, 0) }; }),
+      view: vName,
+      views: VIEWS.map(([id, label, c]) => { const on = s.view === id; return { label, n: tasks.filter(t => !t.done && this.inView(id, t)).length || '', dot: c, bg: on ? '#f5f5f5' : '#0b0b0b', color: on ? '#000' : '#c8c8c8', border: on ? '#f5f5f5' : '#1f1f1f', pick: () => this.setState({ view: id }) }; }),
+      groups, listEmpty: !groups.length, doneCount: vDone.length, doneLabel: s.showDone ? 'Hide completed' : `Show ${vDone.length} completed`,
+      toggleShowDone: () => this.setState({ showDone: !s.showDone }), addHint: `Add to ${vName}…`,
+      calSub: s.calDay === 0 ? 'Today, Monday' : `${DOWS[dow(s.calDay)]}, Nov ${2 + s.calDay}`,
+      weekDays: [0, 1, 2, 3, 4, 5, 6].map(d => { const on = s.calDay === d, has = tasks.some(t => t.due === d && !t.done); return { dow: DOWS[dow(d)].slice(0, 1), date: 2 + d, bg: on ? '#f5f5f5' : d === 0 ? '#111' : 'transparent', color: on ? '#000' : d === 0 ? '#f5f5f5' : '#9e9e9e', border: on ? '#f5f5f5' : '#161616', dot: has ? (on ? '#000' : '#7a7a7a') : 'transparent', pick: () => this.setState({ calDay: d }) }; }),
+      allDay, allDayEmpty: !allDay.length,
+      hours: Array.from({ length: 10 }, (_, i) => ({ top: i * 50 + 'px', label: tm(CAL0 + i * 60) })),
+      blocks, showNow: s.calDay === 0, nowTop: (NOW - CAL0) * PXM + 'px',
+      presets: [25, 50, 5].map(n => ({ label: n === 5 ? 'Break' : n + 'm', bg: s.preset === n ? '#f5f5f5' : 'transparent', color: s.preset === n ? '#000' : '#9e9e9e', pick: () => this.setState({ preset: n, remaining: n * 60, running: false }) })),
+      focusTaskTitle: ft ? ft.title : 'No task, just focus', focusTaskColor: ft ? lc(ft.list).c : '#3a3a3a',
+      cycleFocusTask: () => this.setState({ sheet: 'pick', pickQ: '' }), _oldCycle: () => { const o = this.sortT(open); const i = o.findIndex(t => t.id === s.focusTask); this.setState({ focusTask: (o[i + 1] || o[0]).id }); },
+      ringOffset: 791.7 * (1 - s.remaining / (s.preset * 60)), timeText, timerState: s.running ? (s.preset === 5 ? 'Break' : 'Focusing') : live ? 'Paused' : 'Ready',
+      timerBtn: s.running ? 'Pause' : live ? 'Resume' : 'Start', toggleTimer: () => this.setTimer({ running: !s.running }),
+      resetTimer: () => this.setState({ running: false, remaining: s.preset * 60 }), skipTimer: () => this.setTimer({ remaining: 1, running: true }),
+      ...(() => { const t0 = BASE.getTime(), w0 = dateOf(-dow(0)).getTime(), fp = S.pomos.filter(p => p.kind !== 'short' && p.kind !== 'long');
+        const today = fp.filter(p => p.end >= t0), wk = fp.filter(p => p.end >= w0).reduce((a, p) => a + (p.mins || 0), 0), tm2 = Math.round(today.reduce((a, p) => a + (p.mins || 0), 0));
+        return { sessions: today.length, focusTotal: `${Math.floor(tm2 / 60)}h ${tm2 % 60}m`, focusWeek: `${Math.floor(wk / 60)}h ${Math.round(wk % 60)}m` }; })(),
+      weekLetters: [-6, -5, -4, -3, -2, -1, 0].map(d => ({ label: DOWS[dow(d)].slice(0, 1), color: d === 0 ? '#f5f5f5' : '#5c5c5c' })),
+      habitRows: HABITS.map(h => ({ name: h.short, streak: `${streak(h.id)}d streak`, color: '#9e9e9e', cells: [-6, -5, -4, -3, -2, -1, 0].map(d => { const on = s.hlog.has(h.id + '|' + d); return { bg: on ? (d === 0 ? '#f5f5f5' : '#bdbdbd') : '#111', border: on ? 'transparent' : (d === 0 ? '#3a3a3a' : '#1c1c1c'), glow: 'none', toggle: () => togH(h.id, d) }; }) })),
+      weekPct: Math.round(100 * [...s.hlog].filter(k => +k.split('|')[1] >= -6 && +k.split('|')[1] <= 0).length / (HN * 7)) + '%',
+      addHabit: () => this.flash({ msg: 'New habit: coming in the full build' }),
+      toast: s.toast, undo: () => { if (this.undoSnap) { const u = JSON.parse(this.undoSnap); S.tasks = u.tasks; S.plans = u.plans; this.undoSnap = null; saveData(); } this.setState({ toast: null, rev: REV }); },
+      tabs: tabsDef.map(([id, label, d]) => { const on = s.tab === id || false; return { label, d, color: on ? '#f5f5f5' : '#5c5c5c', glow: 'none', live: id === 'focus' && s.running && s.tab !== 'focus', pick: () => this.go(id) }; }),
+      sheetOpen: !!s.sheet, isAdd: s.sheet === 'add', isDetail: s.sheet === 'detail' && !!dt, isWhat: s.sheet === 'what', isMore: s.sheet === 'more', isAccount: s.sheet === 'account', isRecovery: s.sheet === 'recovery', isFeed: s.sheet === 'feed', isPlanEdit: s.sheet === 'plan' && !!s.planDraft,
+      draft: s.draft, onDraft: e => { const v = e.target.value; this.setState({ draft: v, duePicker: /(^|\s)due\s*$/i.test(v) ? true : s.duePicker && /(^|\s)due(\s|$)/i.test(v) }); }, onDraftKey: e => { if (e.key === 'Enter') this.add(); },
+      parsedChips: chips, submitAdd: () => this.add(), addBg: p.title ? '#f5f5f5' : '#1c1c1c', addColor: p.title ? '#000' : '#5c5c5c',
+      quickAdds: ['today', 'tomorrow', '!1'].map(q => ({ label: q === '!1' ? 'High' : q[0].toUpperCase() + q.slice(1), pick: () => this.setState({ draft: (s.draft.trim() + ' ' + q).trim() + ' ' }) })),
+      d: dt ? { ...this.taskVM(dt), when: dayLabel(dt.due) + (dt.time != null ? ' ' + tm(dt.time) : ''), list: lc(dt.list).name, listColor: lc(dt.list).c, prio: PRIO[dt.prio], prioColor: PRING[Math.max(dt.prio, 1)],
+        cycleList: () => this.upd(dt.id, t => ({ list: LISTS[(LISTS.findIndex(l => l.id === t.list) + 1) % LISTS.length].id })),
+        cycleDue: () => this.upd(dt.id, t => { const o = [0, 1, 2, 7, null], i = o.indexOf(t.due); return { due: o[(i + 1) % o.length] }; }),
+        cyclePrio: () => this.upd(dt.id, t => ({ prio: (t.prio + 1) % 4 })),
+        hasSubs: dt.subs.length > 0, subs: dt.subs.map((x, i) => ({ t: x.t, ring: x.d ? '#5c5c5c' : '#6b6b6b', bg: x.d ? '#5c5c5c' : 'transparent', color: x.d ? '#5c5c5c' : '#e0e0e0', deco: x.d ? 'line-through' : 'none', toggle: () => this.upd(dt.id, t => ({ subs: t.subs.map((y, j) => j === i ? { ...y, d: !y.d } : y) })) })),
+        focus: () => this.setState({ focusTask: dt.id, tab: 'focus', sheet: null }),
+        remove: () => { const r = this.rec(dt.id); if (r) { this.keepUndo(); r.deleted = true; saveData(); } this.setState({ sheet: null, rev: REV }); this.flash({ msg: 'Moved to trash', undo: true }); } } : {},
+      energyOpts: seg(['Low', 'Okay', 'High'], s.energy, 'energy'), timeOpts: seg(['15 min', '30 min', '1 hr+'], s.free, 'free'),
+      pick: pick ? { title: pick.title, why } : { title: 'Nothing pressing', why: 'You\u2019re clear for now.' },
+      anotherPick: () => this.setState({ pickIdx: s.pickIdx + 1 }),
+      startPick: () => pick && this.setTimer({ focusTask: pick.id, tab: 'focus', sheet: null, running: true, remaining: s.preset * 60 }),
+      ...this.calVals(s, P.all),
+      ...this.habitChart(s),
+      ...this.searchVals(s, tasks),
+      ...(() => {
+        const base = dateOf(0), my = s.dpMonth ?? (base.getFullYear() * 12 + base.getMonth()), y = Math.floor(my / 12), m = my % 12;
+        const lead = new Date(y, m, 1).getDay(), dim = new Date(y, m + 1, 0).getDate();
+        const choose = off => this.setState(st => ({ draftDue: off, duePicker: false, draft: st.draft.replace(/(^|\s)due(\s+|$)/i, '$1').replace(/\s{2,}/g, ' ') }));
+        const sel = s.draftDue;
+        return { duePicker: s.sheet === 'add' && !!s.duePicker, noDuePicker: !(s.sheet === 'add' && s.duePicker),
+          dpTitle: MON[m] + ' ' + y, dpPrev: () => this.setState({ dpMonth: my - 1 }), dpNext: () => this.setState({ dpMonth: my + 1 }),
+          dueQuick: [['Today', 0], ['Tomorrow', 1], ['Next week', ((1 - dow(0) + 7) % 7) || 7], ['No date', 'none']].map(([label, v]) => ({ label, pick: () => choose(v) })),
+          dpCells: [...Array(lead).fill(null), ...Array.from({ length: dim }, (_, i) => i + 1)].map(d => { if (!d) return { n: '', bg: 'transparent', color: 'transparent', border: '0', pick: () => {} };
+            const off = offOf(y, m, d), past = off < 0, on = sel === off;
+            return { n: d, bg: on ? '#f5f5f5' : 'transparent', color: on ? '#000' : past ? '#3a3a3a' : '#e8e8e8', border: off === 0 && !on ? '1px solid #555' : '0', pick: () => choose(off) }; }) };
+      })(),
+      ...(() => {
+        const q = (s.pickQ || '').trim().toLowerCase();
+        const pool = this.sortT(open).filter(t => !q || t.title.toLowerCase().includes(q) || lc(t.list).name.toLowerCase().includes(q));
+        const vm = t => ({ title: t.title, dot: lc(t.list).c, meta: [lc(t.list).name, t.due != null ? dayLabel(t.due) + (t.time != null ? ' ' + tm(t.time) : '') : null].filter(Boolean).join(' · '), sel: t.id === s.focusTask, bg: t.id === s.focusTask ? '#1a1a1a' : 'transparent', pick: () => this.setState({ focusTask: t.id, sheet: null }) });
+        const g = q ? [['Results', pool]] : [['Today', pool.filter(t => t.due != null && t.due <= 0)], ['Upcoming', pool.filter(t => t.due > 0)], ['No date', pool.filter(t => t.due == null)]];
+        return { isPick: s.sheet === 'pick', pickQuery: s.pickQ || '', onPickQuery: e => this.setState({ pickQ: e.target.value }), clearPickQuery: () => this.setState({ pickQ: '' }),
+          pickGroups: g.filter(x => x[1].length).map(([label, items]) => ({ label, items: items.map(vm) })), pickEmpty: !pool.length,
+          pickNone: () => this.setState({ focusTask: null, sheet: null }) };
+      })(),
+      moreItems: [['matrix', 'Matrix', ICON.matrix, ''], ['plans', 'Plans', ICON.target, S.plans.filter(p => !p.archived).length ? `${S.plans.filter(p => !p.archived).length} active` : ''], ['search', 'Search', ICON.search, ''], ['settings', 'Settings', ICON.gear, '']].map(([id, label, d, note]) => ({ label, d, note, pick: () => id === 'search' ? this.setState({ tab: 'search', sheet: null, q: '' }) : this.go(id) })),
+      ...this.matrixVals(tasks),
+      ...this.plansVals(P),
+      ...this.accountVals(s),
+    };
+  }
+}
+
+</script>
+</body>
+</html>

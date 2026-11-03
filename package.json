@@ -1,0 +1,8 @@
+{
+  "name": "hq",
+  "private": true,
+  "description": "Task app with calendar, matrix, focus timer, habits and account sync",
+  "dependencies": {
+    "@neondatabase/serverless": "1.0.2"
+  }
+}
